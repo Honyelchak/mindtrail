@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS 变量系统 - 支持明暗主题 */
+:root {
+  /* 浅色主题 */
+  --color-primary: #667eea;
+  --color-primary-dark: #5a67d8;
+  --color-secondary: #764ba2;
+  --color-accent: #f093fb;
+  
+  /* 背景色 */
+  --color-bg-primary: #f7fafc;
+  --color-bg-secondary: #edf2f7;
+  --color-bg-tertiary: #e2e8f0;
+  
+  /* 文字颜色 */
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  
+  /* 边框颜色 */
+  --color-border: #e2e8f0;
+  --color-border-light: #f7fafc;
+  
+  /* 阴影 */
+  --shadow-neumorphism: 
+    8px 8px 16px rgba(163, 177, 198, 0.6),
+    -8px -8px 16px rgba(255, 255, 255, 0.5);
+  --shadow-neumorphism-inset: 
+    inset 8px 8px 16px rgba(163, 177, 198, 0.6),
+    inset -8px -8px 16px rgba(255, 255, 255, 0.5);
+  --shadow-neumorphism-small: 
+    4px 4px 8px rgba(163, 177, 198, 0.4),
+    -4px -4px 8px rgba(255, 255, 255, 0.4);
+  
+  /* 玻璃态效果 */
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-backdrop: blur(10px);
+}
+
+/* 暗色主题 */
+.dark {
+  --color-primary: #9f7aea;
+  --color-primary-dark: #805ad5;
+  --color-secondary: #667eea;
+  --color-accent: #ed64a6;
+  
+  /* 背景色 */
+  --color-bg-primary: #1a202c;
+  --color-bg-secondary: #2d3748;
+  --color-bg-tertiary: #4a5568;
+  
+  /* 文字颜色 */
+  --color-text-primary: #f7fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-text-muted: #a0aec0;
+  
+  /* 边框颜色 */
+  --color-border: #4a5568;
+  --color-border-light: #2d3748;
+  
+  /* 阴影 */
+  --shadow-neumorphism: 
+    8px 8px 16px rgba(0, 0, 0, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.05);
+  --shadow-neumorphism-inset: 
+    inset 8px 8px 16px rgba(0, 0, 0, 0.4),
+    inset -8px -8px 16px rgba(255, 255, 255, 0.05);
+  --shadow-neumorphism-small: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    -4px -4px 8px rgba(255, 255, 255, 0.03);
+  
+  /* 玻璃态效果 */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-backdrop: blur(10px);
+}
+
+/* 基础样式 */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Neumorphism 组件类 */
+@layer components {
+  .neu-card {
+    @apply rounded-2xl;
+    background: var(--color-bg-primary);
+    box-shadow: var(--shadow-neumorphism);
+    transition: all 0.3s ease;
+  }
+  
+  .neu-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .neu-card-inset {
+    @apply rounded-2xl;
+    background: var(--color-bg-primary);
+    box-shadow: var(--shadow-neumorphism-inset);
+  }
+  
+  .neu-button {
+    @apply rounded-xl px-6 py-3 font-medium transition-all duration-200;
+    background: var(--color-bg-primary);
+    box-shadow: var(--shadow-neumorphism-small);
+    color: var(--color-text-primary);
+  }
+  
+  .neu-button:hover {
+    box-shadow: var(--shadow-neumorphism-inset);
+  }
+  
+  .neu-button:active {
+    box-shadow: var(--shadow-neumorphism-inset);
+    transform: scale(0.98);
+  }
+  
+  .glass-card {
+    @apply rounded-2xl border;
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    backdrop-filter: var(--glass-backdrop);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+  }
+  
+  .glass-nav {
+    @apply border-b;
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    backdrop-filter: var(--glass-backdrop);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+  }
+}
+
+/* 工具类 */
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  }
+  
+  .bg-gradient-accent {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .neu-card {
+    @apply rounded-xl;
+    box-shadow: var(--shadow-neumorphism-small);
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* 动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 加载动画 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
