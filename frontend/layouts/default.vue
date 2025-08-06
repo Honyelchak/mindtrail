@@ -17,17 +17,17 @@
 // 页面元数据
 useHead({
   htmlAttrs: {
-    lang: 'zh-CN'
+    lang: 'zh-CN',
   },
   link: [
     {
       rel: 'preconnect',
-      href: 'https://fonts.googleapis.com'
+      href: 'https://fonts.googleapis.com',
     },
     {
       rel: 'preconnect',
       href: 'https://fonts.gstatic.com',
-      crossorigin: ''
+      crossorigin: '',
     },
     {
       rel: 'stylesheet',
