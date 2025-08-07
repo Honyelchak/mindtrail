@@ -1,101 +1,229 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- 页面头部 -->
-    <div class="mb-8">
-      <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-gradient mb-2">足迹地图</h1>
-        <p class="text-lg text-neutral-600 dark:text-neutral-400">
-          在地图上回顾你的记录足迹
-        </p>
-      </div>
+    <div
+      class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+    >
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+              足迹地图
+            </h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              探索你的内容足迹，重温美好回忆
+            </p>
+          </div>
 
-      <!-- 统计信息 -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="neu-card p-4 text-center">
-          <div
-            class="text-2xl font-bold text-primary-600 dark:text-primary-400"
-          >
-            {{ stats.totalLocations }}
+          <!-- 统计信息 -->
+          <div class="flex items-center space-x-6 text-sm">
+            <div class="text-center">
+              <div class="text-lg font-bold text-primary-600">
+                {{ totalLocations }}
+              </div>
+              <div class="text-gray-500">地点</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-green-600">
+                {{ totalContents }}
+              </div>
+              <div class="text-gray-500">内容</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-purple-600">
+                {{ totalRevisits }}
+              </div>
+              <div class="text-gray-500">回访</div>
+            </div>
           </div>
-          <div class="text-sm text-neutral-500 dark:text-neutral-400">地点</div>
-        </div>
-        <div class="neu-card p-4 text-center">
-          <div
-            class="text-2xl font-bold text-secondary-600 dark:text-secondary-400"
-          >
-            {{ stats.cities }}
-          </div>
-          <div class="text-sm text-neutral-500 dark:text-neutral-400">城市</div>
-        </div>
-        <div class="neu-card p-4 text-center">
-          <div class="text-2xl font-bold text-accent-600 dark:text-accent-400">
-            {{ stats.countries }}
-          </div>
-          <div class="text-sm text-neutral-500 dark:text-neutral-400">国家</div>
-        </div>
-        <div class="neu-card p-4 text-center">
-          <div class="text-2xl font-bold text-green-600 dark:text-green-400">
-            {{ stats.totalDistance }}
-          </div>
-          <div class="text-sm text-neutral-500 dark:text-neutral-400">公里</div>
         </div>
       </div>
     </div>
 
-    <!-- 地图组件 -->
-    <MapView
-      :markers="mapMarkers"
-      :center="mapCenter"
-      :zoom="mapZoom"
-      height="600px"
-    />
+    <div class="container mx-auto px-4 py-6">
+      <div class="grid lg:grid-cols-4 gap-6">
+        <!-- 左侧：筛选和列表 -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- 筛选器 -->
+          <div class="glass-card p-4">
+            <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-4">
+              筛选条件
+            </h3>
 
-    <!-- 位置列表 -->
-    <div class="mt-8">
-      <div class="neu-card p-6">
-        <h2 class="text-xl font-semibold mb-4 flex items-center space-x-2">
-          <MapPinIcon class="w-5 h-5" />
-          <span>最近访问的地点</span>
-        </h2>
-
-        <div class="space-y-4">
-          <div
-            v-for="location in recentLocations"
-            :key="location.id"
-            class="flex items-center justify-between p-4 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
-            @click="centerMapToLocation(location)"
-          >
-            <div class="flex items-center space-x-4">
-              <div
-                class="w-10 h-10 rounded-full flex items-center justify-center"
-                :style="{
-                  backgroundColor: getLocationColor(location.type) + '20',
-                }"
+            <!-- 内容类型筛选 -->
+            <div class="mb-4">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                <MapPinIcon
-                  class="w-5 h-5"
-                  :style="{ color: getLocationColor(location.type) }"
-                />
-              </div>
-
-              <div>
-                <h3 class="font-medium text-neutral-800 dark:text-neutral-200">
-                  {{ location.name }}
-                </h3>
-                <p class="text-sm text-neutral-500 dark:text-neutral-400">
-                  {{ location.address }}
-                </p>
+                内容类型
+              </label>
+              <div class="space-y-2">
+                <label
+                  v-for="type in contentTypes"
+                  :key="type.key"
+                  class="flex items-center space-x-2 cursor-pointer"
+                >
+                  <input
+                    v-model="filters.contentTypes"
+                    :value="type.key"
+                    type="checkbox"
+                    class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  />
+                  <div class="flex items-center space-x-2">
+                    <component :is="type.icon" class="w-4 h-4" />
+                    <span class="text-sm">{{ type.label }}</span>
+                  </div>
+                </label>
               </div>
             </div>
 
-            <div class="text-right">
-              <div
-                class="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+            <!-- 时间范围筛选 -->
+            <div class="mb-4">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {{ location.count }} 次记录
-              </div>
-              <div class="text-xs text-neutral-500 dark:text-neutral-400">
-                最近: {{ formatDate(location.lastVisit) }}
+                时间范围
+              </label>
+              <select
+                v-model="filters.timeRange"
+                class="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-sm"
+              >
+                <option value="all">全部时间</option>
+                <option value="today">今天</option>
+                <option value="week">本周</option>
+                <option value="month">本月</option>
+                <option value="year">今年</option>
+              </select>
+            </div>
+
+            <!-- 清除筛选 -->
+            <button
+              @click="clearFilters"
+              class="w-full text-sm text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              清除筛选条件
+            </button>
+          </div>
+
+          <!-- 位置列表 -->
+          <div class="glass-card p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-gray-800 dark:text-gray-200">
+                位置列表
+              </h3>
+              <span class="text-sm text-gray-500"
+                >{{ filteredLocations.length }} 个地点</span
+              >
+            </div>
+
+            <div class="space-y-2 max-h-96 overflow-y-auto">
+              <button
+                v-for="location in filteredLocations"
+                :key="location.id"
+                @click="selectLocation(location)"
+                class="w-full p-3 rounded-lg border transition-all text-left"
+                :class="
+                  selectedLocationId === location.id
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                "
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-1">
+                      <div
+                        class="w-4 h-4 rounded flex items-center justify-center"
+                        :class="
+                          getContentTypeConfig(location.contentType).bgClass
+                        "
+                      >
+                        <component
+                          :is="getContentTypeConfig(location.contentType).icon"
+                          class="w-2 h-2 text-white"
+                        />
+                      </div>
+                      <span
+                        class="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1"
+                      >
+                        {{ location.title }}
+                      </span>
+                    </div>
+                    <p
+                      class="text-xs text-gray-600 dark:text-gray-400 mb-1 line-clamp-1"
+                    >
+                      {{ location.address }}
+                    </p>
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs text-gray-500">
+                        {{ formatDate(location.createdAt, 'relative') }}
+                      </span>
+                      <div
+                        v-if="location.revisits.length > 0"
+                        class="flex items-center space-x-1"
+                      >
+                        <EyeIcon class="w-3 h-3 text-gray-400" />
+                        <span class="text-xs text-gray-500">{{
+                          location.revisits.length
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：地图 -->
+        <div class="lg:col-span-3">
+          <div class="glass-card p-4 h-[600px]">
+            <InteractiveMap
+              :height="'100%'"
+              :show-controls="true"
+              :initial-center="mapCenter"
+              :initial-zoom="mapZoom"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 位置聚类统计 -->
+      <div class="mt-8">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+          位置聚类
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            v-for="cluster in locationClusters"
+            :key="`cluster-${cluster.center.latitude}-${cluster.center.longitude}`"
+            class="glass-card p-4 hover:scale-105 transition-transform cursor-pointer"
+            @click="focusCluster(cluster)"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-medium text-gray-800 dark:text-gray-200">
+                {{ cluster.name || getClusterName(cluster) }}
+              </h3>
+              <span class="text-sm text-gray-500"
+                >{{ cluster.contents.length }} 项内容</span
+              >
+            </div>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              {{ cluster.center.address || '未知位置' }}
+            </p>
+
+            <!-- 内容类型分布 -->
+            <div class="flex space-x-2">
+              <div
+                v-for="type in getClusterContentTypes(cluster)"
+                :key="type.key"
+                class="flex items-center space-x-1"
+              >
+                <div
+                  class="w-3 h-3 rounded"
+                  :class="getContentTypeConfig(type.key).bgClass"
+                />
+                <span class="text-xs text-gray-500">{{ type.count }}</span>
               </div>
             </div>
           </div>
@@ -106,107 +234,220 @@
 </template>
 
 <script setup>
-import { MapPinIcon } from '@heroicons/vue/24/outline'
+import {
+  DocumentTextIcon,
+  ChatBubbleLeftRightIcon,
+  PhotoIcon,
+  VideoCameraIcon,
+  EyeIcon,
+} from '@heroicons/vue/24/outline'
+import { formatDate } from '~/utils'
 
 // 页面元数据
 useHead({
-  title: '足迹地图 - Mindtrail',
+  title: '足迹地图 - 思维轨迹',
   meta: [
     {
       name: 'description',
-      content: '在地图上标记足迹，回顾走过的每一个地方。',
+      content: '在地图上查看你的所有内容足迹，重温美好回忆，发现新的故事。',
     },
   ],
 })
 
-// 响应式数据
-const mapCenter = ref({ lat: 39.9042, lng: 116.4074 }) // 北京
-const mapZoom = ref(10)
+// 使用位置数据
+const { locationHistory, locationClusters, getCurrentLocation } = useLocation()
 
-// 使用 Timeline Composable 获取数据
-const { timeline, loadMockData } = useTimeline()
-
-// 计算属性
-const mapMarkers = computed(() => {
-  return timeline.value.filter((item) => item.location?.coordinates)
+// 筛选状态
+const filters = reactive({
+  contentTypes: ['moment', 'article', 'gallery', 'video'],
+  timeRange: 'all',
 })
 
-const stats = computed(() => {
-  const locations = mapMarkers.value
-  const uniqueLocations = new Set(locations.map((item) => item.location.name))
-  const uniqueCities = new Set(
-    locations.map((item) => {
-      const address = item.location.address || ''
-      return address.split('市')[0] + '市'
-    })
-  )
+const selectedLocationId = ref(null)
 
-  return {
-    totalLocations: uniqueLocations.size,
-    cities: uniqueCities.size,
-    countries: 1, // 模拟数据，实际应该从地址中提取
-    totalDistance: Math.round(Math.random() * 1000), // 模拟总距离
+// 内容类型配置
+const contentTypes = [
+  { key: 'moment', label: '说说', icon: ChatBubbleLeftRightIcon },
+  { key: 'article', label: '文章', icon: DocumentTextIcon },
+  { key: 'gallery', label: '相册', icon: PhotoIcon },
+  { key: 'video', label: '视频', icon: VideoCameraIcon },
+]
+
+// 获取内容类型配置
+const getContentTypeConfig = (type) => {
+  const configs = {
+    moment: { icon: ChatBubbleLeftRightIcon, bgClass: 'bg-green-500' },
+    article: { icon: DocumentTextIcon, bgClass: 'bg-blue-500' },
+    gallery: { icon: PhotoIcon, bgClass: 'bg-purple-500' },
+    video: { icon: VideoCameraIcon, bgClass: 'bg-red-500' },
   }
+  return configs[type] || configs.moment
+}
+
+// 统计数据
+const totalLocations = computed(() => {
+  const uniqueLocations = new Set()
+  locationHistory.value.forEach((location) => {
+    const key = `${location.latitude.toFixed(4)},${location.longitude.toFixed(4)}`
+    uniqueLocations.add(key)
+  })
+  return uniqueLocations.size
 })
 
-const recentLocations = computed(() => {
-  const locationMap = new Map()
+const totalContents = computed(() => locationHistory.value.length)
 
-  // 统计每个位置的访问次数
-  mapMarkers.value.forEach((item) => {
-    const locationKey = item.location.name
-    if (locationMap.has(locationKey)) {
-      const existing = locationMap.get(locationKey)
-      existing.count++
-      if (new Date(item.createdAt) > new Date(existing.lastVisit)) {
-        existing.lastVisit = item.createdAt
-      }
-    } else {
-      locationMap.set(locationKey, {
-        id: item.location.name,
-        name: item.location.name,
-        address: item.location.address,
-        coordinates: item.location.coordinates,
-        type: item.type,
-        count: 1,
-        lastVisit: item.createdAt,
-      })
+const totalRevisits = computed(() => {
+  return locationHistory.value.reduce((total, location) => {
+    return total + (location.revisits?.length || 0)
+  }, 0)
+})
+
+// 筛选后的位置
+const filteredLocations = computed(() => {
+  let filtered = locationHistory.value
+
+  // 按内容类型筛选
+  if (filters.contentTypes.length > 0) {
+    filtered = filtered.filter((location) =>
+      filters.contentTypes.includes(location.contentType)
+    )
+  }
+
+  // 按时间范围筛选
+  if (filters.timeRange !== 'all') {
+    const now = new Date()
+    let startDate
+
+    switch (filters.timeRange) {
+      case 'today':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        break
+      case 'week':
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+        break
+      case 'month':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+        break
+      case 'year':
+        startDate = new Date(now.getFullYear(), 0, 1)
+        break
     }
-  })
 
-  // 转换为数组并按最近访问时间排序
-  return Array.from(locationMap.values())
-    .sort((a, b) => new Date(b.lastVisit) - new Date(a.lastVisit))
-    .slice(0, 5) // 只显示最近的5个位置
+    if (startDate) {
+      filtered = filtered.filter(
+        (location) => new Date(location.createdAt) >= startDate
+      )
+    }
+  }
+
+  return filtered.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
 })
 
-// 方法
-const getLocationColor = (type) => {
-  const colors = {
-    moment: '#f093fb',
-    article: '#667eea',
-    gallery: '#764ba2',
+// 地图中心和缩放
+const mapCenter = computed(() => {
+  if (filteredLocations.value.length > 0) {
+    const firstLocation = filteredLocations.value[0]
+    return {
+      lat: firstLocation.latitude,
+      lng: firstLocation.longitude,
+    }
   }
-  return colors[type] || '#667eea'
+  return { lat: 39.9042, lng: 116.4074 } // 默认北京
+})
+
+const mapZoom = computed(() => {
+  return filteredLocations.value.length > 0 ? 13 : 10
+})
+
+// 获取聚类名称
+const getClusterName = (cluster) => {
+  if (cluster.contents.length === 1) {
+    return cluster.contents[0].title
+  }
+  return `${cluster.contents.length} 项内容`
 }
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('zh-CN', {
-    month: 'long',
-    day: 'numeric',
+// 获取聚类内容类型分布
+const getClusterContentTypes = (cluster) => {
+  const typeCount = {}
+  cluster.contents.forEach((content) => {
+    typeCount[content.contentType] = (typeCount[content.contentType] || 0) + 1
   })
+
+  return Object.entries(typeCount).map(([key, count]) => ({
+    key,
+    count,
+  }))
 }
 
-const centerMapToLocation = (location) => {
-  if (location.coordinates) {
-    mapCenter.value = location.coordinates
-    mapZoom.value = 15
-  }
+// 选择位置
+const selectLocation = (location) => {
+  selectedLocationId.value = location.id
+  // 这里可以触发地图聚焦到该位置
 }
 
-// 页面加载时获取数据
+// 聚焦聚类
+const focusCluster = (cluster) => {
+  // 这里可以触发地图聚焦到聚类中心
+  console.log('聚焦聚类:', cluster)
+}
+
+// 清除筛选
+const clearFilters = () => {
+  filters.contentTypes = ['moment', 'article', 'gallery', 'video']
+  filters.timeRange = 'all'
+}
+
+// 组件挂载时获取当前位置
 onMounted(() => {
-  loadMockData()
+  getCurrentLocation().catch(() => {
+    // 忽略位置获取失败
+  })
 })
 </script>
+
+<style scoped>
+.glass-card {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+</style>

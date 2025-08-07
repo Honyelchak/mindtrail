@@ -1,14 +1,16 @@
 <template>
   <div class="rich-text-editor">
     <!-- 工具栏 -->
-    <div class="toolbar border-b border-neutral-200 dark:border-neutral-700 p-3 flex items-center space-x-2 flex-wrap">
+    <div
+      class="toolbar border-b border-neutral-200 dark:border-neutral-700 p-3 flex items-center space-x-2 flex-wrap"
+    >
       <!-- 文本格式 -->
       <div class="flex items-center space-x-1">
         <button
           type="button"
           @click="execCommand('bold')"
           class="toolbar-btn"
-          :class="{ 'active': isActive('bold') }"
+          :class="{ active: isActive('bold') }"
           title="粗体"
         >
           <BoldIcon class="w-4 h-4" />
@@ -17,7 +19,7 @@
           type="button"
           @click="execCommand('italic')"
           class="toolbar-btn"
-          :class="{ 'active': isActive('italic') }"
+          :class="{ active: isActive('italic') }"
           title="斜体"
         >
           <ItalicIcon class="w-4 h-4" />
@@ -26,7 +28,7 @@
           type="button"
           @click="execCommand('underline')"
           class="toolbar-btn"
-          :class="{ 'active': isActive('underline') }"
+          :class="{ active: isActive('underline') }"
           title="下划线"
         >
           <UnderlineIcon class="w-4 h-4" />
@@ -71,7 +73,7 @@
           type="button"
           @click="execCommand('insertUnorderedList')"
           class="toolbar-btn"
-          :class="{ 'active': isActive('insertUnorderedList') }"
+          :class="{ active: isActive('insertUnorderedList') }"
           title="无序列表"
         >
           <ListBulletIcon class="w-4 h-4" />
@@ -80,7 +82,7 @@
           type="button"
           @click="execCommand('insertOrderedList')"
           class="toolbar-btn"
-          :class="{ 'active': isActive('insertOrderedList') }"
+          :class="{ active: isActive('insertOrderedList') }"
           title="有序列表"
         >
           <ListNumberIcon class="w-4 h-4" />
@@ -144,10 +146,10 @@
     ></div>
 
     <!-- 字数统计 -->
-    <div class="border-t border-neutral-200 dark:border-neutral-700 p-3 flex items-center justify-between text-sm text-neutral-500 dark:text-neutral-400">
-      <div>
-        字数: {{ wordCount }}
-      </div>
+    <div
+      class="border-t border-neutral-200 dark:border-neutral-700 p-3 flex items-center justify-between text-sm text-neutral-500 dark:text-neutral-400"
+    >
+      <div>字数: {{ wordCount }}</div>
       <div class="flex items-center space-x-4">
         <span>支持 Markdown 语法</span>
         <button
@@ -178,26 +180,26 @@ import {
   LinkIcon,
   ChatBubbleBottomCenterTextIcon,
   MinusIcon,
-  XMarkIcon
+  XMarkIcon,
 } from '@heroicons/vue/24/outline'
 
 // 自定义图标组件（简单实现）
 const ListNumberIcon = {
   template: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7M5 5v14l4-7-4-7z"/>
-  </svg>`
+  </svg>`,
 }
 
 // Props
 const props = defineProps({
   modelValue: {
     type: String,
-    default: ''
+    default: '',
   },
   placeholder: {
     type: String,
-    default: '开始写作...'
-  }
+    default: '开始写作...',
+  },
 })
 
 // Emits
@@ -216,14 +218,14 @@ const wordCount = computed(() => {
 const previewContent = computed(() => {
   // 简单的 Markdown 转换（实际项目中应该使用专业的 Markdown 解析器）
   let content = props.modelValue
-  
+
   // 基本的 Markdown 转换
   content = content
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/`(.*?)`/g, '<code>$1</code>')
     .replace(/\n/g, '<br>')
-  
+
   return content
 })
 
@@ -282,11 +284,14 @@ const togglePreview = () => {
 }
 
 // 监听 modelValue 变化
-watch(() => props.modelValue, (newValue) => {
-  if (editorRef.value && editorRef.value.innerHTML !== newValue) {
-    editorRef.value.innerHTML = newValue
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (editorRef.value && editorRef.value.innerHTML !== newValue) {
+      editorRef.value.innerHTML = newValue
+    }
   }
-})
+)
 
 // 组件挂载后设置初始内容
 onMounted(() => {
@@ -334,7 +339,8 @@ onMounted(() => {
   @apply mb-3;
 }
 
-.editor-content ul, .editor-content ol {
+.editor-content ul,
+.editor-content ol {
   @apply mb-3 pl-6;
 }
 

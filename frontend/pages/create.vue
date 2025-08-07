@@ -224,8 +224,8 @@
                 submitting
                   ? '发布中...'
                   : form.isDraft
-                  ? '保存草稿'
-                  : '立即发布'
+                    ? '保存草稿'
+                    : '立即发布'
               }}
             </button>
           </div>
@@ -257,9 +257,18 @@ useHead({
 // 路由
 const router = useRouter()
 
+// 使用 Composables
+const {
+  saveDraft: saveDraftToDB,
+  autoSaveDraft,
+  loadDrafts,
+  getDraft,
+} = useDrafts()
+
 // 响应式数据
 const selectedType = ref('')
 const submitting = ref(false)
+const currentDraftId = ref(null)
 
 // 表单数据
 const form = ref({
@@ -406,10 +415,39 @@ const submitContent = async () => {
   }
 }
 
-const saveDraft = () => {
-  form.value.isDraft = true
-  submitContent()
+const saveDraft = async () => {
+  try {
+    const draftData = {
+      id: currentDraftId.value,
+      type: selectedType.value,
+      ...form.value,
+    }
+
+    const draftId = await saveDraftToDB(draftData)
+    currentDraftId.value = draftId
+
+    // 显示保存成功提示
+    console.log('草稿保存成功')
+  } catch (error) {
+    console.error('保存草稿失败:', error)
+  }
 }
+
+// 监听表单变化，自动保存草稿
+watch(
+  [form, selectedType],
+  () => {
+    if (selectedType.value && (form.value.title || form.value.content)) {
+      const draftData = {
+        id: currentDraftId.value,
+        type: selectedType.value,
+        ...form.value,
+      }
+      autoSaveDraft(draftData)
+    }
+  },
+  { deep: true }
+)
 
 const goBack = () => {
   router.back()

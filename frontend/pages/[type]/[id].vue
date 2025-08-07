@@ -143,12 +143,29 @@
         </div>
 
         <!-- 正文内容 -->
-        <div class="prose prose-lg max-w-none dark:prose-invert mb-8">
+        <div class="mb-8">
+          <!-- 如果是文章类型，使用双栏布局 -->
           <div
             v-if="content.type === 'article'"
-            v-html="formattedContent"
-          ></div>
-          <p v-else class="text-lg leading-relaxed">{{ content.content }}</p>
+            class="lg:grid lg:grid-cols-4 lg:gap-8"
+          >
+            <!-- 文章内容 -->
+            <div class="lg:col-span-3">
+              <MarkdownRenderer :content="content.content" />
+            </div>
+
+            <!-- 目录侧边栏 -->
+            <div class="hidden lg:block lg:col-span-1">
+              <ArticleToc :content="content.content" />
+            </div>
+          </div>
+
+          <!-- 其他类型使用普通文本 -->
+          <div v-else class="prose prose-lg max-w-none dark:prose-invert">
+            <p class="text-lg leading-relaxed whitespace-pre-wrap">
+              {{ content.content }}
+            </p>
+          </div>
         </div>
 
         <!-- 标签 -->
@@ -281,13 +298,7 @@ const emotionConfig = computed(() => {
   return emotions.find((emotion) => emotion.type === content.value.emotion.type)
 })
 
-// 格式化内容（用于文章的 Markdown 渲染）
-const formattedContent = computed(() => {
-  if (!content.value || content.value.type !== 'article') return ''
-
-  // 这里可以集成 Markdown 解析器，现在先简单处理
-  return content.value.content.replace(/\n/g, '<br>')
-})
+// Markdown 渲染现在由 MarkdownRenderer 组件处理
 
 // 加载内容
 const loadContent = async () => {

@@ -1,0 +1,34 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景渐变 -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8fafc;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景圆角矩形 -->
+  <rect width="512" height="512" rx="80" fill="url(#bg-gradient)"/>
+  
+  <!-- 主图标 - 思维轨迹符号 -->
+  <g transform="translate(128, 128)">
+    <!-- 大脑轮廓 -->
+    <path d="M128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64V192C0 227.346 28.6538 256 64 256H192C227.346 256 256 227.346 256 192V128C256 92.6538 227.346 64 192 64H128Z" fill="url(#icon-gradient)" opacity="0.9"/>
+    
+    <!-- 思维轨迹线条 -->
+    <path d="M64 80L96 112L128 80L160 112L192 80" stroke="url(#bg-gradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M64 128L96 160L128 128L160 160L192 128" stroke="url(#bg-gradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M64 176L96 208L128 176L160 208L192 176" stroke="url(#bg-gradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    
+    <!-- 装饰点 -->
+    <circle cx="64" cy="64" r="8" fill="url(#bg-gradient)"/>
+    <circle cx="192" cy="64" r="8" fill="url(#bg-gradient)"/>
+    <circle cx="64" cy="192" r="8" fill="url(#bg-gradient)"/>
+    <circle cx="192" cy="192" r="8" fill="url(#bg-gradient)"/>
+  </g>
+</svg>

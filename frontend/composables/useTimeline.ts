@@ -3,17 +3,26 @@
  * 提供时间流数据的获取、过滤、排序等功能
  */
 
+import type {
+  TimelineItem,
+  Emotion,
+  Tag,
+  TimelineFilters,
+  SortBy,
+  SortOrder,
+} from '~/types'
+
 export const useTimeline = () => {
   // 响应式数据
-  const timeline = ref([])
-  const emotions = ref([])
-  const tags = ref([])
-  const loading = ref(false)
-  const error = ref(null)
+  const timeline = ref<TimelineItem[]>([])
+  const emotions = ref<Emotion[]>([])
+  const tags = ref<Tag[]>([])
+  const loading = ref<boolean>(false)
+  const error = ref<string | null>(null)
 
   // 过滤器状态
-  const filters = ref({
-    type: 'all', // all, moment, article, gallery
+  const filters = ref<TimelineFilters>({
+    type: 'all',
     tag: '',
     emotion: '',
     dateRange: null,
@@ -21,8 +30,8 @@ export const useTimeline = () => {
   })
 
   // 排序选项
-  const sortBy = ref('createdAt') // createdAt, updatedAt, views, likes
-  const sortOrder = ref('desc') // asc, desc
+  const sortBy = ref<SortBy>('createdAt')
+  const sortOrder = ref<SortOrder>('desc')
 
   /**
    * 加载 Mock 数据
@@ -35,18 +44,86 @@ export const useTimeline = () => {
       // 模拟 API 调用延迟
       await new Promise((resolve) => setTimeout(resolve, 500))
 
-      // 导入 Mock 数据
-      const mockData = await import('../data/mock-data.json')
+      // 使用新的模拟数据生成器
+      const { generateMockTimeline, MOODS, TAGS } = useMockData()
 
-      timeline.value = mockData.timeline || []
-      emotions.value = mockData.emotions || []
-      tags.value = mockData.tags || []
+      timeline.value = generateMockTimeline()
+
+      // 生成情绪数据
+      emotions.value = MOODS.map((mood, index) => ({
+        id: `emotion_${index}`,
+        type: mood,
+        label: mood,
+        emoji: getMoodEmoji(mood),
+        color: getMoodColor(mood),
+      }))
+
+      // 生成标签数据
+      tags.value = TAGS.map((tag, index) => ({
+        id: `tag_${index}`,
+        name: tag,
+        count: Math.floor(Math.random() * 20) + 1,
+        color: getTagColor(tag),
+      }))
     } catch (err) {
       error.value = '加载数据失败'
       console.error('Error loading mock data:', err)
     } finally {
       loading.value = false
     }
+  }
+
+  // 获取心情表情
+  const getMoodEmoji = (mood: string): string => {
+    const moodEmojis: Record<string, string> = {
+      happy: '😊',
+      excited: '🤩',
+      peaceful: '😌',
+      thoughtful: '🤔',
+      grateful: '🙏',
+      nostalgic: '😌',
+      inspired: '💡',
+      relaxed: '😎',
+      curious: '🧐',
+      content: '😇',
+    }
+    return moodEmojis[mood] || '😊'
+  }
+
+  // 获取心情颜色
+  const getMoodColor = (mood: string): string => {
+    const moodColors: Record<string, string> = {
+      happy: '#10B981',
+      excited: '#F59E0B',
+      peaceful: '#3B82F6',
+      thoughtful: '#8B5CF6',
+      grateful: '#EF4444',
+      nostalgic: '#6B7280',
+      inspired: '#F97316',
+      relaxed: '#06B6D4',
+      curious: '#84CC16',
+      content: '#EC4899',
+    }
+    return moodColors[mood] || '#6B7280'
+  }
+
+  // 获取标签颜色
+  const getTagColor = (tag: string): string => {
+    const colors = [
+      '#EF4444',
+      '#F97316',
+      '#F59E0B',
+      '#84CC16',
+      '#10B981',
+      '#06B6D4',
+      '#3B82F6',
+      '#8B5CF6',
+      '#EC4899',
+    ]
+    const index = tag
+      .split('')
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    return colors[index % colors.length]
   }
 
   /**

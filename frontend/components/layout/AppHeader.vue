@@ -122,6 +122,15 @@
                   <span>创建内容</span>
                 </NuxtLink>
 
+                <NuxtLink
+                  to="/admin"
+                  class="user-menu-item"
+                  @click="showUserMenu = false"
+                >
+                  <CogIcon class="w-4 h-4" />
+                  <span>管理后台</span>
+                </NuxtLink>
+
                 <button
                   @click="handleLogout"
                   class="user-menu-item w-full text-left text-red-600 dark:text-red-400"
@@ -188,6 +197,8 @@ import {
   XMarkIcon,
   ChevronDownIcon,
   PlusIcon,
+  CogIcon,
+  ClockIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/vue/24/outline'
 
@@ -205,14 +216,12 @@ const navigation = computed(() => {
     { name: '说说', href: '/moments', icon: ChatBubbleLeftRightIcon },
     { name: '文章', href: '/articles', icon: DocumentTextIcon },
     { name: '相册', href: '/gallery', icon: PhotoIcon },
+    { name: '时间轴', href: '/timeline', icon: ClockIcon },
     { name: '地图', href: '/map', icon: MapIcon },
   ]
 
-  // 如果未登录，添加登录链接
-  if (!isAuthenticated.value) {
-    baseNavigation.push({ name: '登录', href: '/login', icon: UserIcon })
-  } else {
-    // 如果已登录，添加创建内容链接
+  // 如果已登录，添加创建内容链接
+  if (isAuthenticated.value) {
     baseNavigation.push({ name: '创建', href: '/create', icon: PlusIcon })
   }
 

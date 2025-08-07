@@ -304,6 +304,7 @@ useHead({
 
 // 路由
 const router = useRouter()
+const route = useRoute()
 
 // 使用认证 Composable
 const { login, register, loading, error, clearError } = useAuth()
@@ -337,8 +338,9 @@ const handleLogin = async () => {
   })
 
   if (result.success) {
-    // 登录成功，跳转到首页
-    await router.push('/')
+    // 登录成功，跳转到重定向页面或首页
+    const redirectTo = route.query.redirect || '/'
+    await router.push(redirectTo)
   }
 }
 
@@ -358,8 +360,9 @@ const handleRegister = async () => {
   })
 
   if (result.success) {
-    // 注册成功，跳转到首页
-    await router.push('/')
+    // 注册成功，跳转到重定向页面或首页
+    const redirectTo = route.query.redirect || '/'
+    await router.push(redirectTo)
   }
 }
 

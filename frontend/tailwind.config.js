@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./components/**/*.{js,vue,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
-    "./plugins/**/*.{js,ts}",
-    "./app.vue",
-    "./error.vue"
+    './components/**/*.{js,vue,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './plugins/**/*.{js,ts}',
+    './app.vue',
+    './error.vue',
   ],
   darkMode: 'class',
   theme: {
@@ -59,29 +59,56 @@ export default {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
-        }
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+        sans: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'Noto Sans',
+          'sans-serif',
+        ],
+        mono: [
+          'JetBrains Mono',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
       },
       spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
+        18: '4.5rem',
+        88: '22rem',
+        128: '32rem',
       },
       borderRadius: {
         '4xl': '2rem',
         '5xl': '2.5rem',
       },
       boxShadow: {
-        'neu': '8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.5)',
-        'neu-inset': 'inset 8px 8px 16px rgba(163, 177, 198, 0.6), inset -8px -8px 16px rgba(255, 255, 255, 0.5)',
-        'neu-small': '4px 4px 8px rgba(163, 177, 198, 0.4), -4px -4px 8px rgba(255, 255, 255, 0.4)',
-        'neu-dark': '8px 8px 16px rgba(0, 0, 0, 0.4), -8px -8px 16px rgba(255, 255, 255, 0.05)',
-        'neu-dark-inset': 'inset 8px 8px 16px rgba(0, 0, 0, 0.4), inset -8px -8px 16px rgba(255, 255, 255, 0.05)',
-        'neu-dark-small': '4px 4px 8px rgba(0, 0, 0, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.03)',
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        neu: '8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.5)',
+        'neu-inset':
+          'inset 8px 8px 16px rgba(163, 177, 198, 0.6), inset -8px -8px 16px rgba(255, 255, 255, 0.5)',
+        'neu-small':
+          '4px 4px 8px rgba(163, 177, 198, 0.4), -4px -4px 8px rgba(255, 255, 255, 0.4)',
+        'neu-dark':
+          '8px 8px 16px rgba(0, 0, 0, 0.4), -8px -8px 16px rgba(255, 255, 255, 0.05)',
+        'neu-dark-inset':
+          'inset 8px 8px 16px rgba(0, 0, 0, 0.4), inset -8px -8px 16px rgba(255, 255, 255, 0.05)',
+        'neu-dark-small':
+          '4px 4px 8px rgba(0, 0, 0, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.03)',
+        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
       },
       backdropBlur: {
         xs: '2px',
@@ -98,58 +125,58 @@ export default {
         fadeInUp: {
           '0%': {
             opacity: '0',
-            transform: 'translateY(20px)'
+            transform: 'translateY(20px)',
           },
           '100%': {
             opacity: '1',
-            transform: 'translateY(0)'
-          }
+            transform: 'translateY(0)',
+          },
         },
         fadeInDown: {
           '0%': {
             opacity: '0',
-            transform: 'translateY(-20px)'
+            transform: 'translateY(-20px)',
           },
           '100%': {
             opacity: '1',
-            transform: 'translateY(0)'
-          }
+            transform: 'translateY(0)',
+          },
         },
         fadeInLeft: {
           '0%': {
             opacity: '0',
-            transform: 'translateX(-20px)'
+            transform: 'translateX(-20px)',
           },
           '100%': {
             opacity: '1',
-            transform: 'translateX(0)'
-          }
+            transform: 'translateX(0)',
+          },
         },
         fadeInRight: {
           '0%': {
             opacity: '0',
-            transform: 'translateX(20px)'
+            transform: 'translateX(20px)',
           },
           '100%': {
             opacity: '1',
-            transform: 'translateX(0)'
-          }
+            transform: 'translateX(0)',
+          },
         },
         bounceGentle: {
           '0%, 100%': {
             transform: 'translateY(-5%)',
-            animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)'
+            animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)',
           },
           '50%': {
             transform: 'translateY(0)',
-            animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
-          }
-        }
+            animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
+          },
+        },
       },
       screens: {
-        'xs': '475px',
+        xs: '475px',
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }
