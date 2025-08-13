@@ -1,13 +1,15 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800">
+  <div
+    class="min-h-screen bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary"
+  >
     <!-- 主导航 -->
-    <AppHeader />
-    
+    <MainNavigation />
+
     <!-- 主内容区域 -->
-    <main class="container mx-auto px-4 py-8 min-h-[calc(100vh-140px)]">
+    <main class="container mx-auto px-4 py-8 pt-20 min-h-[calc(100vh-140px)]">
       <slot />
     </main>
-    
+
     <!-- 页脚 -->
     <AppFooter />
   </div>
@@ -31,9 +33,9 @@ useHead({
     },
     {
       rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
-    }
-  ]
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
+    },
+  ],
 })
 </script>
 

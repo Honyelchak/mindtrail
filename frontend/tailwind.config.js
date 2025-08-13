@@ -60,8 +60,38 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
         },
+
+        // Mood Color System
+        mood: {
+          happy: '#fbbf24',
+          excited: '#f472b6',
+          calm: '#34d399',
+          thinking: '#a78bfa',
+          love: '#fb7185',
+          sad: '#60a5fa',
+          angry: '#f87171',
+          tired: '#9ca3af',
+        },
+
+        // Background System
+        bg: {
+          primary: '#0f172a',
+          secondary: '#1e293b',
+          tertiary: '#334155',
+          surface: '#475569',
+          overlay: 'rgba(15, 23, 42, 0.8)',
+        },
+
+        // Glass Morphism
+        glass: {
+          bg: 'rgba(255, 255, 255, 0.1)',
+          border: 'rgba(255, 255, 255, 0.2)',
+          shadow: 'rgba(0, 0, 0, 0.1)',
+        },
       },
       fontFamily: {
+        display: ['Inter', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
         sans: [
           'Inter',
           'ui-sans-serif',
@@ -87,10 +117,61 @@ export default {
           'monospace',
         ],
       },
+
+      // Typography System
+      fontSize: {
+        'display-xl': [
+          '4.5rem',
+          { lineHeight: '1.1', letterSpacing: '-0.02em' },
+        ],
+        'display-lg': [
+          '3.75rem',
+          { lineHeight: '1.1', letterSpacing: '-0.02em' },
+        ],
+        'display-md': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'display-sm': [
+          '2.25rem',
+          { lineHeight: '1.3', letterSpacing: '-0.01em' },
+        ],
+        'body-xl': ['1.25rem', { lineHeight: '1.7' }],
+        'body-lg': ['1.125rem', { lineHeight: '1.7' }],
+        'body-md': ['1rem', { lineHeight: '1.6' }],
+        'body-sm': ['0.875rem', { lineHeight: '1.6' }],
+        'mono-lg': ['1.125rem', { lineHeight: '1.5' }],
+        'mono-md': ['1rem', { lineHeight: '1.5' }],
+        'mono-sm': ['0.875rem', { lineHeight: '1.5' }],
+      },
       spacing: {
         18: '4.5rem',
+        22: '5.5rem',
+        26: '6.5rem',
+        30: '7.5rem',
+        34: '8.5rem',
+        38: '9.5rem',
+        42: '10.5rem',
+        46: '11.5rem',
+        50: '12.5rem',
+        54: '13.5rem',
+        58: '14.5rem',
+        62: '15.5rem',
+        66: '16.5rem',
+        70: '17.5rem',
+        74: '18.5rem',
+        78: '19.5rem',
+        82: '20.5rem',
+        86: '21.5rem',
         88: '22rem',
+        90: '22.5rem',
+        94: '23.5rem',
+        98: '24.5rem',
         128: '32rem',
+      },
+
+      // Animation Timing
+      transitionDuration: {
+        200: '200ms',
+        350: '350ms',
+        450: '450ms',
       },
       borderRadius: {
         '4xl': '2rem',
@@ -120,6 +201,16 @@ export default {
         'fade-in-right': 'fadeInRight 0.6s ease-out',
         'bounce-gentle': 'bounceGentle 2s infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+
+        // Module-specific animations
+        'parallax-hero': 'parallaxHero 20s ease-in-out infinite',
+        'image-focus-zoom': 'imageFocusZoom 0.35s ease-out',
+        'playhead-pulse': 'playheadPulse 2s ease-in-out infinite',
+        'map-flyto-bounce':
+          'mapFlyToBounce 0.45s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        'gallery-mosaic-hover': 'galleryMosaicHover 0.35s ease-out',
+        'timeline-zoom': 'timelineZoom 0.2s ease-out',
+        'article-drop-cap': 'articleDropCap 0.45s ease-out',
       },
       keyframes: {
         fadeInUp: {
@@ -171,6 +262,37 @@ export default {
             transform: 'translateY(0)',
             animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
           },
+        },
+
+        // Module-specific keyframes
+        parallaxHero: {
+          '0%, 100%': { transform: 'translateY(0px) scale(1)' },
+          '50%': { transform: 'translateY(-20px) scale(1.02)' },
+        },
+        imageFocusZoom: {
+          '0%': { transform: 'scale(1)', filter: 'brightness(1)' },
+          '100%': { transform: 'scale(1.05)', filter: 'brightness(1.1)' },
+        },
+        playheadPulse: {
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.2)', opacity: '0.8' },
+        },
+        mapFlyToBounce: {
+          '0%': { transform: 'scale(0.8) translateY(10px)', opacity: '0' },
+          '60%': { transform: 'scale(1.1) translateY(-5px)', opacity: '1' },
+          '100%': { transform: 'scale(1) translateY(0px)', opacity: '1' },
+        },
+        galleryMosaicHover: {
+          '0%': { transform: 'scale(1)', filter: 'brightness(1)' },
+          '100%': { transform: 'scale(1.03)', filter: 'brightness(1.1)' },
+        },
+        timelineZoom: {
+          '0%': { transform: 'scaleX(1)' },
+          '100%': { transform: 'scaleX(1.1)' },
+        },
+        articleDropCap: {
+          '0%': { transform: 'scale(0.8)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
       screens: {

@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto px-4">
       <!-- 页面头部 -->
       <div class="mb-8">
         <div class="flex items-center justify-between">

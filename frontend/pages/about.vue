@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen">
     <!-- 页面头部 -->
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 px-4">
       <h1 class="text-4xl font-bold text-gradient mb-4">关于我</h1>
       <p
         class="text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto"
