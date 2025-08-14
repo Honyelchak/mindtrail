@@ -1,12 +1,17 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary"
+    class="min-h-screen transition-all duration-300"
+    :class="[
+      $colorMode.value === 'dark'
+        ? 'bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary'
+        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100',
+    ]"
   >
     <!-- 主导航 -->
     <MainNavigation />
 
     <!-- 主内容区域 -->
-    <main class="container mx-auto px-4 py-8 pt-20 min-h-[calc(100vh-140px)]">
+    <main class="container mx-auto px-4 py-8 pt-24 min-h-[calc(100vh-140px)]">
       <slot />
     </main>
 

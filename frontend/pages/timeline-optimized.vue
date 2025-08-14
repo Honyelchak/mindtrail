@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-page -mx-4 -my-8 -mt-20">
+  <div class="timeline-page -mx-4 -my-8">
     <!-- 页面内容区域 -->
     <div>
       <!-- 优化后的页面头部 -->
@@ -688,7 +688,9 @@ const formatDateRange = () => {
     .sort((a, b) => a.getTime() - b.getTime())
   const start = dates[0]
   const end = dates[dates.length - 1]
-  return `${start.toLocaleDateString('zh-CN')} - ${end.toLocaleDateString('zh-CN')}`
+  return `${start.toLocaleDateString('zh-CN')} - ${end.toLocaleDateString(
+    'zh-CN'
+  )}`
 }
 </script>
 

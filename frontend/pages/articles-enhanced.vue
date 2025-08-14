@@ -1,5 +1,5 @@
 <template>
-  <div class="articles-page -mx-4 -my-8 -mt-20">
+  <div class="articles-page -mx-4 -my-8">
     <!-- 页面头部 -->
     <header class="relative py-20 pt-8 overflow-hidden">
       <!-- 背景装饰 -->
@@ -16,11 +16,19 @@
       <div class="container mx-auto px-4 relative z-10">
         <div class="text-center">
           <h1
-            class="font-display text-display-lg md:text-display-xl text-white font-bold mb-6"
+            class="font-display text-display-lg md:text-display-xl font-bold mb-6 transition-colors duration-300"
+            :class="
+              $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+            "
           >
             文章集合
           </h1>
-          <p class="text-body-lg text-white/70 max-w-2xl mx-auto mb-8">
+          <p
+            class="text-body-lg max-w-2xl mx-auto mb-8 transition-colors duration-300"
+            :class="
+              $colorMode.value === 'dark' ? 'text-white/70' : 'text-gray-600'
+            "
+          >
             探索思维的边界，记录知识的轨迹。在这里，每一篇文章都是一次深度思考的结晶。
           </p>
 
@@ -31,11 +39,21 @@
                 v-model="searchQuery"
                 type="text"
                 placeholder="搜索文章..."
-                class="w-full bg-glass-bg backdrop-blur-md border border-glass-border rounded-2xl px-6 py-4 pl-12 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-transparent transition-all duration-200"
+                class="w-full backdrop-blur-md border rounded-2xl px-6 py-4 pl-12 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-transparent transition-all duration-200"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'bg-white/10 border-white/20 text-white placeholder-white/60'
+                    : 'bg-white/80 border-gray-200 text-gray-900 placeholder-gray-500'
+                "
               />
               <Icon
                 name="heroicons:magnifying-glass"
-                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-500'
+                "
               />
             </div>
           </div>
@@ -43,31 +61,51 @@
       </div>
     </header>
 
-    <!-- 文章网格 -->
+    <!-- 主要内容区域 -->
     <main class="container mx-auto px-4 pb-20">
-      <ArticlesGrid
-        :articles="filteredArticles"
-        :loading="loading"
-        :view-mode="viewMode"
-        @article-click="handleArticleClick"
-        @view-mode-change="handleViewModeChange"
-      />
-
-      <!-- 加载更多 -->
-      <div v-if="hasMore" class="text-center mt-12">
-        <button
-          @click="loadMore"
-          :disabled="loading"
-          class="px-8 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-medium rounded-xl transition-all duration-200 hover:scale-105 disabled:scale-100 shadow-lg"
-        >
-          <span v-if="loading" class="flex items-center space-x-2">
+      <div class="flex gap-8">
+        <!-- 侧边栏 -->
+        <aside class="w-80 flex-shrink-0">
+          <div class="sticky top-24 space-y-6">
+            <!-- 文章分类 -->
             <div
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
-            ></div>
-            <span>加载中...</span>
-          </span>
-          <span v-else>加载更多</span>
-        </button>
+              class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
+            >
+              <ArticleCategories
+                :selected-category="selectedCategory"
+                @category-change="handleCategoryChange"
+              />
+            </div>
+          </div>
+        </aside>
+
+        <!-- 文章内容区域 -->
+        <div class="flex-1 min-w-0">
+          <ArticlesGrid
+            :articles="filteredArticles"
+            :loading="loading"
+            :view-mode="viewMode"
+            @article-click="handleArticleClick"
+            @view-mode-change="handleViewModeChange"
+          />
+
+          <!-- 加载更多 -->
+          <div v-if="hasMore" class="text-center mt-12">
+            <button
+              @click="loadMore"
+              :disabled="loading"
+              class="px-8 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-medium rounded-xl transition-all duration-200 hover:scale-105 disabled:scale-100 shadow-lg"
+            >
+              <span v-if="loading" class="flex items-center space-x-2">
+                <div
+                  class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+                ></div>
+                <span>加载中...</span>
+              </span>
+              <span v-else>加载更多</span>
+            </button>
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -88,6 +126,7 @@ useHead({
 // 响应式状态
 const searchQuery = ref('')
 const viewMode = ref<'magazine' | 'grid' | 'list'>('magazine')
+const selectedCategory = ref('all')
 const loading = ref(false)
 const hasMore = ref(true)
 
@@ -120,7 +159,7 @@ const articles = ref([
     readingTime: 12,
     tags: ['深度学习', 'NLP', '人工智能', '机器学习'],
     featured: true,
-    category: '技术',
+    category: 'tech-learning',
     views: 1250,
   },
   {
@@ -144,7 +183,7 @@ const articles = ref([
     readingTime: 8,
     tags: ['前端', 'JavaScript', 'Vue', 'React'],
     featured: false,
-    category: '技术',
+    category: 'tech-learning',
     views: 890,
   },
   {
@@ -168,7 +207,7 @@ const articles = ref([
     readingTime: 15,
     tags: ['设计系统', 'UI设计', 'UX', '用户体验'],
     featured: true,
-    category: '设计',
+    category: 'work-reflection',
     views: 2100,
   },
   {
@@ -192,7 +231,7 @@ const articles = ref([
     readingTime: 20,
     tags: ['微服务', '架构设计', '后端开发', '分布式系统'],
     featured: false,
-    category: '技术',
+    category: 'tech-learning',
     views: 1680,
   },
   {
@@ -216,25 +255,107 @@ const articles = ref([
     readingTime: 10,
     tags: ['数据可视化', '数据分析', '图表设计', 'D3.js'],
     featured: false,
-    category: '数据',
+    category: 'tech-learning',
     views: 950,
+  },
+  {
+    id: '6',
+    title: '生活中的小确幸',
+    excerpt:
+      '在忙碌的生活中，总有一些小小的瞬间能够带给我们温暖和快乐。记录这些美好的时刻，让生活更有意义。',
+    content: '<p>生活感悟...</p>',
+    coverImage: {
+      url: 'https://picsum.photos/1200/800?random=6',
+      alt: '生活感悟',
+      width: 1200,
+      height: 800,
+    },
+    author: {
+      name: '李明',
+      avatar: 'https://picsum.photos/100/100?random=6',
+      title: '生活观察者',
+    },
+    publishedAt: '2024-01-12T14:30:00Z',
+    readingTime: 5,
+    tags: ['生活', '感悟', '幸福', '日常'],
+    featured: false,
+    category: 'life-thoughts',
+    views: 1200,
+  },
+  {
+    id: '7',
+    title: '《人类简史》读后感',
+    excerpt:
+      '尤瓦尔·赫拉利的这本书让我重新思考了人类文明的发展历程。从认知革命到农业革命，再到科学革命，每一个转折点都值得深思。',
+    content: '<p>读书笔记...</p>',
+    coverImage: {
+      url: 'https://picsum.photos/1200/800?random=7',
+      alt: '人类简史',
+      width: 1200,
+      height: 800,
+    },
+    author: {
+      name: '张文',
+      avatar: 'https://picsum.photos/100/100?random=7',
+      title: '阅读爱好者',
+    },
+    publishedAt: '2024-01-08T10:15:00Z',
+    readingTime: 12,
+    tags: ['读书', '历史', '人类学', '思考'],
+    featured: true,
+    category: 'reading-notes',
+    views: 1850,
+  },
+  {
+    id: '8',
+    title: '京都之行：古都的诗意与宁静',
+    excerpt:
+      '在京都的三天里，我感受到了这座古都独特的魅力。从清水寺到金阁寺，从竹林小径到艺伎街，每一处风景都让人流连忘返。',
+    content: '<p>旅行日记...</p>',
+    coverImage: {
+      url: 'https://picsum.photos/1200/800?random=8',
+      alt: '京都旅行',
+      width: 1200,
+      height: 800,
+    },
+    author: {
+      name: '王旅',
+      avatar: 'https://picsum.photos/100/100?random=8',
+      title: '旅行博主',
+    },
+    publishedAt: '2024-01-03T16:45:00Z',
+    readingTime: 8,
+    tags: ['旅行', '京都', '日本', '文化'],
+    featured: false,
+    category: 'travel-diary',
+    views: 2100,
   },
 ])
 
 // 计算属性
 const filteredArticles = computed(() => {
-  if (!searchQuery.value) {
-    return articles.value
+  let filtered = articles.value
+
+  // 分类筛选
+  if (selectedCategory.value !== 'all') {
+    filtered = filtered.filter(
+      (article) => article.category === selectedCategory.value
+    )
   }
 
-  const query = searchQuery.value.toLowerCase()
-  return articles.value.filter(
-    (article) =>
-      article.title.toLowerCase().includes(query) ||
-      article.excerpt.toLowerCase().includes(query) ||
-      article.tags.some((tag) => tag.toLowerCase().includes(query)) ||
-      article.category.toLowerCase().includes(query)
-  )
+  // 搜索筛选
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(
+      (article) =>
+        article.title.toLowerCase().includes(query) ||
+        article.excerpt.toLowerCase().includes(query) ||
+        article.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+        article.category.toLowerCase().includes(query)
+    )
+  }
+
+  return filtered
 })
 
 // 事件处理
@@ -244,6 +365,10 @@ const handleArticleClick = (article: any) => {
 
 const handleViewModeChange = (mode: string) => {
   viewMode.value = mode as 'magazine' | 'grid' | 'list'
+}
+
+const handleCategoryChange = (categoryId: string) => {
+  selectedCategory.value = categoryId
 }
 
 const loadMore = async () => {

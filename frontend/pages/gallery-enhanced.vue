@@ -1,5 +1,5 @@
 <template>
-  <div class="gallery-page -mx-4 -my-8 -mt-20">
+  <div class="gallery-page -mx-4 -my-8">
     <!-- 页面头部 -->
     <header class="relative py-16 pt-8 overflow-hidden">
       <!-- 背景装饰 -->
@@ -16,39 +16,104 @@
       <div class="container mx-auto px-4 relative z-10">
         <div class="text-center">
           <h1
-            class="font-display text-display-lg md:text-display-xl text-white font-bold mb-6"
+            class="font-display text-display-lg md:text-display-xl font-bold mb-6 transition-colors duration-300"
+            :class="
+              $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+            "
           >
             视觉画廊
           </h1>
-          <p class="text-body-lg text-white/70 max-w-2xl mx-auto mb-8">
+          <p
+            class="text-body-lg max-w-2xl mx-auto mb-8 transition-colors duration-300"
+            :class="
+              $colorMode.value === 'dark' ? 'text-white/70' : 'text-gray-600'
+            "
+          >
             用镜头记录世界的美好，用故事连接每一个瞬间。探索光影交织的艺术世界。
           </p>
 
           <!-- 统计信息 -->
           <div class="flex justify-center space-x-8 text-center">
             <div
-              class="bg-glass-bg backdrop-blur-md rounded-2xl px-6 py-4 border border-glass-border"
+              class="backdrop-blur-md rounded-2xl px-6 py-4 border transition-all duration-300"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-white/10 border-white/20'
+                  : 'bg-white/80 border-gray-200'
+              "
             >
-              <div class="text-2xl font-bold text-white mb-1">
+              <div
+                class="text-2xl font-bold mb-1 transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+              >
                 {{ photos.length }}
               </div>
-              <div class="text-white/60 text-sm">张照片</div>
+              <div
+                class="text-sm transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-600'
+                "
+              >
+                张照片
+              </div>
             </div>
             <div
-              class="bg-glass-bg backdrop-blur-md rounded-2xl px-6 py-4 border border-glass-border"
+              class="backdrop-blur-md rounded-2xl px-6 py-4 border transition-all duration-300"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-white/10 border-white/20'
+                  : 'bg-white/80 border-gray-200'
+              "
             >
-              <div class="text-2xl font-bold text-white mb-1">
+              <div
+                class="text-2xl font-bold mb-1 transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+              >
                 {{ stories.length }}
               </div>
-              <div class="text-white/60 text-sm">个故事</div>
+              <div
+                class="text-sm transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-600'
+                "
+              >
+                个故事
+              </div>
             </div>
             <div
-              class="bg-glass-bg backdrop-blur-md rounded-2xl px-6 py-4 border border-glass-border"
+              class="backdrop-blur-md rounded-2xl px-6 py-4 border transition-all duration-300"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-white/10 border-white/20'
+                  : 'bg-white/80 border-gray-200'
+              "
             >
-              <div class="text-2xl font-bold text-white mb-1">
+              <div
+                class="text-2xl font-bold mb-1 transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+              >
                 {{ uniqueLocations }}
               </div>
-              <div class="text-white/60 text-sm">个地点</div>
+              <div
+                class="text-sm transition-colors duration-300"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-600'
+                "
+              >
+                个地点
+              </div>
             </div>
           </div>
         </div>
@@ -57,16 +122,40 @@
 
     <!-- 主要内容 -->
     <main class="container mx-auto px-4 pb-20">
-      <GalleryMosaic
-        :photos="photos"
-        :stories="stories"
-        :view-mode="viewMode"
-        :loading="loading"
-        @photo-click="handlePhotoClick"
-        @story-click="handleStoryClick"
-        @view-mode-change="handleViewModeChange"
-        @view-all-stories="handleViewAllStories"
-      />
+      <div class="flex gap-8">
+        <!-- 侧边栏 -->
+        <aside class="w-80 flex-shrink-0">
+          <div class="sticky top-24 space-y-6">
+            <!-- 相册分类 -->
+            <div
+              class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
+            >
+              <GalleryCategories
+                :selected-category="selectedCategory"
+                :selected-tags="selectedTags"
+                :selected-time-range="selectedTimeRange"
+                @category-change="handleCategoryChange"
+                @tags-change="handleTagsChange"
+                @time-range-change="handleTimeRangeChange"
+              />
+            </div>
+          </div>
+        </aside>
+
+        <!-- 相册内容区域 -->
+        <div class="flex-1 min-w-0">
+          <GalleryMosaic
+            :photos="filteredPhotos"
+            :stories="stories"
+            :view-mode="viewMode"
+            :loading="loading"
+            @photo-click="handlePhotoClick"
+            @story-click="handleStoryClick"
+            @view-mode-change="handleViewModeChange"
+            @view-all-stories="handleViewAllStories"
+          />
+        </div>
+      </div>
 
       <!-- 加载更多 -->
       <div v-if="hasMore" class="text-center mt-12">
@@ -126,6 +215,9 @@ useHead({
 
 // 响应式状态
 const viewMode = ref<'mosaic' | 'grid'>('mosaic')
+const selectedCategory = ref('all')
+const selectedTags = ref<string[]>([])
+const selectedTimeRange = ref('all')
 const loading = ref(false)
 const hasMore = ref(true)
 const showLightbox = ref(false)
@@ -154,6 +246,7 @@ const photos = ref([
       settings: 'f/2.8, 1/60s, ISO 800',
     },
     tags: ['城市', '夜景', '建筑', '灯光'],
+    category: 'nature',
     aspectRatio: 1.5,
   },
   {
@@ -173,6 +266,7 @@ const photos = ref([
       settings: 'f/8, 1/125s, ISO 200',
     },
     tags: ['自然', '山景', '晨雾', '风光'],
+    category: 'nature',
     aspectRatio: 0.67,
   },
   {
@@ -192,6 +286,7 @@ const photos = ref([
       settings: 'f/11, 1/250s, ISO 100',
     },
     tags: ['海景', '日落', '自然', '风光'],
+    category: 'travel',
     aspectRatio: 1.78,
   },
   {
@@ -211,6 +306,7 @@ const photos = ref([
       settings: 'f/5.6, 1/200s, ISO 400',
     },
     tags: ['古镇', '水乡', '建筑', '文化'],
+    category: 'travel',
     aspectRatio: 1,
   },
   {
@@ -230,7 +326,69 @@ const photos = ref([
       settings: 'f/4, 1/80s, ISO 320',
     },
     tags: ['森林', '自然', '光影', '绿色'],
+    category: 'nature',
     aspectRatio: 1.75,
+  },
+  // 添加更多不同分类的照片
+  {
+    id: '6',
+    url: 'https://picsum.photos/1200/900?random=6',
+    thumbnail: 'https://picsum.photos/400/300?random=6',
+    title: '朋友聚餐',
+    description: '和好朋友们一起享受美好的聚餐时光。',
+    location: {
+      name: '北京三里屯',
+      coordinates: [116.4551, 39.9389] as [number, number],
+    },
+    takenAt: '2024-01-12T19:30:00Z',
+    camera: {
+      make: 'iPhone',
+      model: '15 Pro',
+      settings: '自动模式',
+    },
+    tags: ['朋友', '聚餐', '美食', '快乐'],
+    category: 'friends',
+    aspectRatio: 1.33,
+  },
+  {
+    id: '7',
+    url: 'https://picsum.photos/800/1200?random=7',
+    thumbnail: 'https://picsum.photos/300/400?random=7',
+    title: '家庭晚餐',
+    description: '温馨的家庭时光，妈妈做的菜总是最香的。',
+    location: {
+      name: '家',
+      coordinates: [116.3974, 39.9093] as [number, number],
+    },
+    takenAt: '2024-01-14T18:00:00Z',
+    camera: {
+      make: 'iPhone',
+      model: '15 Pro',
+      settings: '人像模式',
+    },
+    tags: ['家庭', '晚餐', '温馨', '爱'],
+    category: 'daily-life',
+    aspectRatio: 0.67,
+  },
+  {
+    id: '8',
+    url: 'https://picsum.photos/1600/1200?random=8',
+    thumbnail: 'https://picsum.photos/400/300?random=8',
+    title: '美味拉面',
+    description: '热腾腾的拉面，是冬日里最温暖的慰藉。',
+    location: {
+      name: '一兰拉面',
+      coordinates: [116.4074, 39.9042] as [number, number],
+    },
+    takenAt: '2024-01-11T12:30:00Z',
+    camera: {
+      make: 'Sony',
+      model: 'A7 III',
+      settings: 'f/2.8, 1/60s, ISO 800',
+    },
+    tags: ['美食', '拉面', '日式', '温暖'],
+    category: 'food',
+    aspectRatio: 1.33,
   },
 ])
 
@@ -272,6 +430,60 @@ const stories = ref([
 ])
 
 // 计算属性
+const filteredPhotos = computed(() => {
+  let filtered = photos.value
+
+  // 分类筛选
+  if (selectedCategory.value !== 'all') {
+    filtered = filtered.filter(
+      (photo) => photo.category === selectedCategory.value
+    )
+  }
+
+  // 标签筛选
+  if (selectedTags.value.length > 0) {
+    filtered = filtered.filter((photo) =>
+      selectedTags.value.some((tag) => photo.tags.includes(tag))
+    )
+  }
+
+  // 时间范围筛选
+  if (selectedTimeRange.value !== 'all') {
+    const now = new Date()
+    const filterDate = new Date()
+
+    switch (selectedTimeRange.value) {
+      case 'this-month':
+        filterDate.setMonth(now.getMonth())
+        break
+      case 'last-month':
+        filterDate.setMonth(now.getMonth() - 1)
+        break
+      case 'this-year':
+        filterDate.setFullYear(now.getFullYear())
+        break
+      case 'last-year':
+        filterDate.setFullYear(now.getFullYear() - 1)
+        break
+      case 'older':
+        filterDate.setFullYear(now.getFullYear() - 2)
+        filtered = filtered.filter(
+          (photo) => new Date(photo.takenAt) < filterDate
+        )
+        return filtered
+    }
+
+    if (selectedTimeRange.value !== 'older') {
+      filtered = filtered.filter((photo) => {
+        const photoDate = new Date(photo.takenAt)
+        return photoDate >= filterDate
+      })
+    }
+  }
+
+  return filtered
+})
+
 const uniqueLocations = computed(() => {
   const locations = new Set()
   photos.value.forEach((photo) => {
@@ -320,9 +532,26 @@ const handleStoryPhotoChange = (index: number) => {
   storyPhotoIndex.value = index
 }
 
+const handleCategoryChange = (categoryId: string) => {
+  selectedCategory.value = categoryId
+}
+
+const handleTagsChange = (tags: string[]) => {
+  selectedTags.value = tags
+}
+
+const handleTimeRangeChange = (timeRangeId: string) => {
+  selectedTimeRange.value = timeRangeId
+}
+
 const handleTagClick = (tag: string) => {
-  // 实现标签过滤逻辑
-  console.log('Tag clicked:', tag)
+  // 切换标签筛选
+  const index = selectedTags.value.indexOf(tag)
+  if (index > -1) {
+    selectedTags.value.splice(index, 1)
+  } else {
+    selectedTags.value.push(tag)
+  }
 }
 
 const handleLocationClick = (location: string) => {

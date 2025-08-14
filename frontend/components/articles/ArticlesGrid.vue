@@ -34,7 +34,14 @@
   <div class="articles-grid-container">
     <!-- 视图模式切换 -->
     <div class="flex justify-end mb-8">
-      <div class="flex items-center bg-glass-bg backdrop-blur-md rounded-xl p-1 border border-glass-border">
+      <div
+        :class="
+          $colorMode.value === 'dark'
+            ? 'bg-white/10 border-white/20'
+            : 'bg-gray-100 border-gray-200'
+        "
+        class="flex items-center backdrop-blur-md rounded-xl p-1"
+      >
         <button
           v-for="mode in viewModes"
           :key="mode.value"
@@ -43,7 +50,9 @@
           :class="[
             viewMode === mode.value
               ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg'
-              : 'text-white/70 hover:text-white hover:bg-white/10'
+              : $colorMode.value === 'dark'
+              ? 'text-white/70 hover:text-white hover:bg-white/10'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
           ]"
         >
           <Icon :name="mode.icon" class="w-4 h-4" />
@@ -75,46 +84,69 @@
               class="w-full h-full object-cover transition-transform duration-350 group-hover:scale-105"
             />
           </picture>
-          
+
           <!-- 渐变遮罩 -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+          />
+
           <!-- 特色标签 -->
           <div v-if="article.featured" class="absolute top-4 left-4">
-            <span class="px-3 py-1 bg-accent-500 text-white text-xs font-medium rounded-full">
+            <span
+              class="px-3 py-1 bg-accent-500 text-white text-xs font-medium rounded-full"
+            >
               精选
             </span>
           </div>
-          
+
           <!-- 阅读时长 -->
           <div class="absolute top-4 right-4">
-            <div class="flex items-center space-x-1 px-2 py-1 bg-black/50 backdrop-blur-sm rounded-full text-white text-xs">
+            <div
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-black/50 text-white'
+                  : 'bg-white/90 text-gray-700'
+              "
+              class="flex items-center space-x-1 px-2 py-1 backdrop-blur-sm rounded-full text-xs"
+            >
               <Icon name="heroicons:clock" class="w-3 h-3" />
               <span>{{ article.readingTime }}分钟</span>
             </div>
           </div>
-          
+
           <!-- 内容区域 -->
           <div class="absolute bottom-0 left-0 right-0 p-6">
             <!-- 分类 -->
             <div class="mb-2">
-              <span class="text-xs font-medium text-primary-300 uppercase tracking-wider">
+              <span
+                class="text-xs font-medium text-primary-300 uppercase tracking-wider"
+              >
                 {{ article.category }}
               </span>
             </div>
-            
+
             <!-- 标题 -->
-            <h3 class="text-white font-bold mb-2 line-clamp-2"
-                :class="index === 0 || index === 3 ? 'text-2xl' : 'text-lg'">
+            <h3
+              :class="[
+                $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900',
+                index === 0 || index === 3 ? 'text-2xl' : 'text-lg',
+              ]"
+              class="font-bold mb-2 line-clamp-2"
+            >
               {{ article.title }}
             </h3>
-            
+
             <!-- 摘要 - 仅在大卡片显示 -->
-            <p v-if="index === 0 || index === 3" 
-               class="text-white/80 text-sm line-clamp-3 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+            <p
+              v-if="index === 0 || index === 3"
+              :class="
+                $colorMode.value === 'dark' ? 'text-white/80' : 'text-gray-700'
+              "
+              class="text-sm line-clamp-3 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-350"
+            >
               {{ article.excerpt }}
             </p>
-            
+
             <!-- 作者和日期 -->
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
@@ -124,9 +156,25 @@
                   class="w-6 h-6 rounded-full"
                   loading="lazy"
                 />
-                <span class="text-white/70 text-xs">{{ article.author.name }}</span>
+                <span
+                  :class="
+                    $colorMode.value === 'dark'
+                      ? 'text-white/70'
+                      : 'text-gray-500'
+                  "
+                  class="text-xs"
+                >
+                  {{ article.author.name }}
+                </span>
               </div>
-              <span class="text-white/50 text-xs">
+              <span
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/50'
+                    : 'text-gray-400'
+                "
+                class="text-xs"
+              >
                 {{ formatDate(article.publishedAt) }}
               </span>
             </div>
@@ -136,7 +184,10 @@
     </div>
 
     <!-- 标准网格布局 -->
-    <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div
+      v-else-if="viewMode === 'grid'"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+    >
       <article
         v-for="article in articles"
         :key="article.id"
@@ -157,43 +208,64 @@
               class="w-full h-full object-cover transition-transform duration-350 group-hover:scale-105"
             />
           </picture>
-          
+
           <!-- 阅读时长 -->
           <div class="absolute top-3 right-3">
-            <div class="flex items-center space-x-1 px-2 py-1 bg-black/50 backdrop-blur-sm rounded-full text-white text-xs">
+            <div
+              class="flex items-center space-x-1 px-2 py-1 bg-black/50 backdrop-blur-sm rounded-full text-white text-xs"
+            >
               <Icon name="heroicons:clock" class="w-3 h-3" />
               <span>{{ article.readingTime }}分钟</span>
             </div>
           </div>
         </div>
-        
+
         <!-- 内容 -->
         <div class="p-6">
           <div class="mb-2">
-            <span class="text-xs font-medium text-primary-400 uppercase tracking-wider">
+            <span
+              class="text-xs font-medium text-primary-400 uppercase tracking-wider"
+            >
               {{ article.category }}
             </span>
           </div>
-          
-          <h3 class="text-white font-bold text-lg mb-3 line-clamp-2 group-hover:text-primary-300 transition-colors duration-200">
+
+          <h3
+            :class="
+              $colorMode.value === 'dark'
+                ? 'text-white group-hover:text-primary-300'
+                : 'text-gray-900 group-hover:text-primary-600'
+            "
+            class="font-bold text-lg mb-3 line-clamp-2 transition-colors duration-200"
+          >
             {{ article.title }}
           </h3>
-          
-          <p class="text-white/70 text-sm line-clamp-3 mb-4">
+
+          <p
+            :class="
+              $colorMode.value === 'dark' ? 'text-white/70' : 'text-gray-600'
+            "
+            class="text-sm line-clamp-3 mb-4"
+          >
             {{ article.excerpt }}
           </p>
-          
+
           <!-- 标签 -->
           <div class="flex flex-wrap gap-2 mb-4">
             <span
               v-for="tag in article.tags.slice(0, 3)"
               :key="tag"
-              class="px-2 py-1 bg-white/10 text-white/60 text-xs rounded-full"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-white/10 text-white/60'
+                  : 'bg-gray-100 text-gray-600'
+              "
+              class="px-2 py-1 text-xs rounded-full"
             >
               {{ tag }}
             </span>
           </div>
-          
+
           <!-- 作者和日期 -->
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
@@ -203,9 +275,23 @@
                 class="w-6 h-6 rounded-full"
                 loading="lazy"
               />
-              <span class="text-white/70 text-xs">{{ article.author.name }}</span>
+              <span
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/70'
+                    : 'text-gray-500'
+                "
+                class="text-xs"
+              >
+                {{ article.author.name }}
+              </span>
             </div>
-            <span class="text-white/50 text-xs">
+            <span
+              :class="
+                $colorMode.value === 'dark' ? 'text-white/50' : 'text-gray-400'
+              "
+              class="text-xs"
+            >
               {{ formatDate(article.publishedAt) }}
             </span>
           </div>
@@ -223,7 +309,9 @@
       >
         <div class="flex gap-6">
           <!-- 图片 -->
-          <div class="flex-shrink-0 w-48 h-32 relative overflow-hidden rounded-xl">
+          <div
+            class="flex-shrink-0 w-48 h-32 relative overflow-hidden rounded-xl"
+          >
             <picture>
               <source
                 :srcset="`${article.coverImage.url}?format=webp&w=400 400w`"
@@ -237,23 +325,27 @@
               />
             </picture>
           </div>
-          
+
           <!-- 内容 -->
           <div class="flex-1">
             <div class="mb-2">
-              <span class="text-xs font-medium text-primary-400 uppercase tracking-wider">
+              <span
+                class="text-xs font-medium text-primary-400 uppercase tracking-wider"
+              >
                 {{ article.category }}
               </span>
             </div>
-            
-            <h3 class="text-white font-bold text-xl mb-3 line-clamp-2 group-hover:text-primary-300 transition-colors duration-200">
+
+            <h3
+              class="text-white font-bold text-xl mb-3 line-clamp-2 group-hover:text-primary-300 transition-colors duration-200"
+            >
               {{ article.title }}
             </h3>
-            
+
             <p class="text-white/70 text-sm line-clamp-2 mb-4">
               {{ article.excerpt }}
             </p>
-            
+
             <!-- 底部信息 -->
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
@@ -264,15 +356,17 @@
                     class="w-6 h-6 rounded-full"
                     loading="lazy"
                   />
-                  <span class="text-white/70 text-sm">{{ article.author.name }}</span>
+                  <span class="text-white/70 text-sm">{{
+                    article.author.name
+                  }}</span>
                 </div>
-                
+
                 <div class="flex items-center space-x-1 text-white/50 text-sm">
                   <Icon name="heroicons:clock" class="w-4 h-4" />
                   <span>{{ article.readingTime }}分钟</span>
                 </div>
               </div>
-              
+
               <span class="text-white/50 text-sm">
                 {{ formatDate(article.publishedAt) }}
               </span>
@@ -284,7 +378,9 @@
 
     <!-- 加载状态 -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+      <div
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"
+      ></div>
     </div>
   </div>
 </template>
@@ -325,7 +421,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
-  viewMode: 'magazine'
+  viewMode: 'magazine',
 })
 
 const emit = defineEmits<Emits>()
@@ -333,7 +429,7 @@ const emit = defineEmits<Emits>()
 const viewModes = [
   { value: 'magazine', label: '杂志', icon: 'heroicons:squares-plus' },
   { value: 'grid', label: '网格', icon: 'heroicons:squares-2x2' },
-  { value: 'list', label: '列表', icon: 'heroicons:list-bullet' }
+  { value: 'list', label: '列表', icon: 'heroicons:list-bullet' },
 ]
 
 // 获取杂志卡片样式类
@@ -355,7 +451,7 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 </script>
@@ -382,7 +478,7 @@ const formatDate = (dateString: string) => {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(auto, 250px);
   }
-  
+
   .magazine-card {
     grid-column: 1 !important;
     grid-row: auto !important;

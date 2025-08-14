@@ -11,7 +11,12 @@
 
 <template>
   <nav
-    class="main-navigation fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-glass-bg/95 to-glass-bg/90 backdrop-blur-xl border-b border-glass-border shadow-glass-lg"
+    class="main-navigation fixed top-0 left-0 right-0 z-[100] backdrop-blur-xl border-b shadow-2xl transition-all duration-300"
+    :class="[
+      $colorMode.value === 'dark'
+        ? 'bg-gradient-to-r from-neutral-900/95 via-neutral-800/90 to-neutral-900/95 border-white/10'
+        : 'bg-gradient-to-r from-white/95 via-gray-50/90 to-white/95 border-gray-200/50',
+    ]"
   >
     <div class="container mx-auto px-6">
       <div class="flex items-center justify-between h-16">
@@ -21,11 +26,27 @@
             <div
               class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
             >
-              <Icon name="heroicons:sparkles" class="w-6 h-6 text-white" />
+              <SparklesIcon class="w-6 h-6 text-white" />
             </div>
             <div class="hidden sm:block">
-              <h1 class="text-white font-bold text-xl">Mindtrail</h1>
-              <p class="text-white/60 text-xs">思维轨迹</p>
+              <h1
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+                class="font-bold text-xl transition-colors duration-300"
+              >
+                Mindtrail
+              </h1>
+              <p
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/70'
+                    : 'text-gray-600'
+                "
+                class="text-xs transition-colors duration-300"
+              >
+                思维轨迹
+              </p>
             </div>
           </NuxtLink>
         </div>
@@ -36,15 +57,26 @@
             v-for="item in navigationItems"
             :key="item.path"
             :to="item.path"
-            class="group flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 hover:bg-white/10 text-white/80 hover:text-white"
-            :class="{
-              'bg-gradient-to-r from-primary-500/20 to-secondary-500/20 text-primary-300':
-                isActive(item.path),
-            }"
+            class="group flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300"
+            :class="[
+              $colorMode.value === 'dark'
+                ? 'text-white/90 hover:text-white hover:bg-white/15'
+                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100',
+              isActive(item.path)
+                ? $colorMode.value === 'dark'
+                  ? 'bg-gradient-to-r from-primary-500/30 to-secondary-500/30 text-white bg-white/10'
+                  : 'bg-gradient-to-r from-primary-500/20 to-secondary-500/20 text-primary-700 bg-primary-50'
+                : '',
+            ]"
           >
-            <Icon
-              :name="item.icon"
-              class="w-5 h-5 text-white/80 group-hover:text-white transition-all duration-300 group-hover:scale-110"
+            <component
+              :is="getIconComponent(item.icon)"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'text-white/90 group-hover:text-white'
+                  : 'text-gray-600 group-hover:text-gray-900'
+              "
+              class="w-5 h-5 transition-all duration-300 group-hover:scale-110"
             />
             <span class="text-sm font-medium">{{ item.label }}</span>
             <div
@@ -62,14 +94,13 @@
           <div class="relative">
             <button
               @click="toggleSearch"
-              class="group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
+              class="group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
               :class="{
-                'bg-primary-500/20 text-primary-300 border-primary-400/50':
+                'bg-primary-500/30 text-white border-primary-400/50':
                   showSearch,
               }"
             >
-              <Icon
-                name="heroicons:magnifying-glass"
+              <MagnifyingGlassIcon
                 class="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
               />
             </button>
@@ -90,8 +121,7 @@
                     @keydown.escape="closeSearch"
                     @keydown.enter="performSearch"
                   />
-                  <Icon
-                    name="heroicons:magnifying-glass"
+                  <MagnifyingGlassIcon
                     class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60"
                   />
                 </div>
@@ -113,8 +143,8 @@
                         backgroundColor: getTypeColor(suggestion.type),
                       }"
                     >
-                      <Icon
-                        :name="getTypeIcon(suggestion.type)"
+                      <component
+                        :is="getIconComponent(getTypeIcon(suggestion.type))"
                         class="w-4 h-4 text-white"
                       />
                     </div>
@@ -142,7 +172,10 @@
                       @click="closeSearch"
                       class="flex items-center space-x-2 p-2 rounded-lg hover:bg-white/10 transition-colors duration-200"
                     >
-                      <Icon :name="item.icon" class="w-4 h-4 text-white/60" />
+                      <component
+                        :is="getIconComponent(item.icon)"
+                        class="w-4 h-4 text-white/60"
+                      />
                       <span class="text-white/80 text-sm">{{
                         item.label
                       }}</span>
@@ -155,12 +188,12 @@
 
           <!-- 主题切换 -->
           <button
-            @click="themeManager.toggleTheme()"
-            class="group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
-            :title="themeManager.getThemeLabel()"
+            @click="toggleTheme()"
+            class="group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
+            :title="getThemeLabel()"
           >
-            <Icon
-              :name="themeManager.getThemeIcon()"
+            <component
+              :is="getIconComponent(getThemeIcon())"
               class="w-5 h-5 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
             />
           </button>
@@ -174,12 +207,11 @@
               <div
                 class="w-6 h-6 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center"
               >
-                <Icon name="heroicons:user" class="w-4 h-4 text-white" />
+                <UserIcon class="w-4 h-4 text-white" />
               </div>
-              <span class="hidden sm:block text-white/80 text-sm">用户</span>
-              <Icon
-                name="heroicons:chevron-down"
-                class="w-4 h-4 text-white/60 transition-transform duration-300"
+              <span class="hidden sm:block text-white/90 text-sm">用户</span>
+              <ChevronDownIcon
+                class="w-4 h-4 text-white/70 transition-transform duration-300"
                 :class="{ 'rotate-180': showUserMenu }"
               />
             </button>
@@ -196,7 +228,10 @@
                   @click="handleUserMenuClick(item)"
                   class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors duration-200 text-left"
                 >
-                  <Icon :name="item.icon" class="w-4 h-4 text-white/60" />
+                  <component
+                    :is="getIconComponent(item.icon)"
+                    class="w-4 h-4 text-white/60"
+                  />
                   <span class="text-white/80 text-sm">{{ item.label }}</span>
                 </button>
               </div>
@@ -206,10 +241,10 @@
           <!-- 移动端菜单按钮 -->
           <button
             @click="toggleMobileMenu"
-            class="md:hidden group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
+            class="md:hidden group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
           >
-            <Icon
-              :name="showMobileMenu ? 'heroicons:x-mark' : 'heroicons:bars-3'"
+            <component
+              :is="showMobileMenu ? XMarkIcon : Bars3Icon"
               class="w-5 h-5 transition-all duration-300 group-hover:scale-110"
             />
           </button>
@@ -227,13 +262,16 @@
             :key="item.path"
             :to="item.path"
             @click="closeMobileMenu"
-            class="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/10 text-white/80 hover:text-white"
+            class="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 text-white/90 hover:text-white"
             :class="{
-              'bg-gradient-to-r from-primary-500/20 to-secondary-500/20 text-primary-300':
+              'bg-gradient-to-r from-primary-500/30 to-secondary-500/30 text-white bg-white/10':
                 isActive(item.path),
             }"
           >
-            <Icon :name="item.icon" class="w-5 h-5 text-white/80" />
+            <component
+              :is="getIconComponent(item.icon)"
+              class="w-5 h-5 text-white/90"
+            />
             <span class="text-sm font-medium">{{ item.label }}</span>
             <div
               v-if="item.badge"
@@ -249,6 +287,33 @@
 </template>
 
 <script setup lang="ts">
+// 图标导入
+import {
+  SparklesIcon,
+  MagnifyingGlassIcon,
+  UserIcon,
+  ChevronDownIcon,
+  XMarkIcon,
+  Bars3Icon,
+  DocumentTextIcon,
+  PhotoIcon,
+  ChatBubbleLeftIcon,
+  ClockIcon,
+  GlobeAsiaAustraliaIcon,
+  Cog6ToothIcon,
+  SwatchIcon,
+  ArrowDownTrayIcon,
+  QuestionMarkCircleIcon,
+  ComputerDesktopIcon,
+  SunIcon,
+  MoonIcon,
+  FlagIcon,
+  BookOpenIcon,
+  CircleStackIcon,
+  MapIcon,
+  HomeIcon,
+} from '@heroicons/vue/24/outline'
+
 // 响应式状态
 const showSearch = ref(false)
 const showUserMenu = ref(false)
@@ -257,10 +322,31 @@ const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement>()
 
 // 主题管理
-const themeManager = useGlobalTheme()
+const { $colorMode } = useNuxtApp()
+
+// 主题切换函数
+const toggleTheme = () => {
+  $colorMode.preference = $colorMode.value === 'dark' ? 'light' : 'dark'
+}
+
+// 获取主题图标
+const getThemeIcon = () => {
+  return $colorMode.value === 'dark' ? 'heroicons:sun' : 'heroicons:moon'
+}
+
+// 获取主题标签
+const getThemeLabel = () => {
+  return $colorMode.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题'
+}
 
 // 导航配置
 const navigationItems = [
+  {
+    path: '/',
+    label: '首页',
+    icon: 'heroicons:home',
+    badge: null,
+  },
   {
     path: '/articles-enhanced',
     label: '文章',
@@ -280,16 +366,16 @@ const navigationItems = [
     badge: null,
   },
   {
-    path: '/timeline-optimized',
+    path: '/timeline-new',
     label: '时间轴',
     icon: 'heroicons:clock',
-    badge: 'New',
+    badge: null,
   },
   {
-    path: '/map-optimized',
+    path: '/map-new',
     label: '地图',
     icon: 'heroicons:globe-asia-australia',
-    badge: 'New',
+    badge: null,
   },
 ]
 
@@ -379,7 +465,7 @@ const closeMobileMenu = () => {
   showMobileMenu.value = false
 }
 
-// 主题切换现在通过 themeManager 处理
+// 主题切换现在通过 Nuxt Color Mode 处理
 
 const performSearch = () => {
   if (searchQuery.value.trim()) {
@@ -414,7 +500,7 @@ const handleUserMenuClick = (item: any) => {
       console.log('Open settings')
       break
     case 'theme':
-      themeManager.toggleTheme()
+      toggleTheme()
       break
     case 'export':
       console.log('Export data')
@@ -444,6 +530,30 @@ const getTypeIcon = (type: string) => {
     story: 'heroicons:book-open',
   }
   return icons[type as keyof typeof icons] || 'heroicons:circle'
+}
+
+// 图标组件映射函数
+const getIconComponent = (iconName: string) => {
+  const iconMap: Record<string, any> = {
+    'heroicons:home': HomeIcon,
+    'heroicons:document-text': DocumentTextIcon,
+    'heroicons:photo': PhotoIcon,
+    'heroicons:chat-bubble-left': ChatBubbleLeftIcon,
+    'heroicons:clock': ClockIcon,
+    'heroicons:globe-asia-australia': GlobeAsiaAustraliaIcon,
+    'heroicons:map': MapIcon,
+    'heroicons:cog-6-tooth': Cog6ToothIcon,
+    'heroicons:swatch': SwatchIcon,
+    'heroicons:arrow-down-tray': ArrowDownTrayIcon,
+    'heroicons:question-mark-circle': QuestionMarkCircleIcon,
+    'heroicons:computer-desktop': ComputerDesktopIcon,
+    'heroicons:sun': SunIcon,
+    'heroicons:moon': MoonIcon,
+    'heroicons:flag': FlagIcon,
+    'heroicons:book-open': BookOpenIcon,
+    'heroicons:circle': CircleStackIcon,
+  }
+  return iconMap[iconName] || CircleStackIcon
 }
 
 // 点击外部关闭菜单

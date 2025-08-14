@@ -48,7 +48,12 @@
     <!-- 顶部故事入口 -->
     <section class="stories-section mb-12">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-display-sm text-white font-bold">精选故事</h2>
+        <h2
+          :class="$colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'"
+          class="text-display-sm font-bold"
+        >
+          精选故事
+        </h2>
         <button
           @click="$emit('viewAllStories')"
           class="text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors duration-200"
@@ -56,10 +61,10 @@
           查看全部 →
         </button>
       </div>
-      
+
       <!-- 故事轮播 -->
       <div class="relative">
-        <div 
+        <div
           class="flex space-x-6 overflow-x-auto scrollbar-hide pb-4"
           ref="storiesContainer"
         >
@@ -83,35 +88,72 @@
                   class="w-full h-full object-cover transition-transform duration-350 group-hover:animate-gallery-mosaic-hover"
                 />
               </picture>
-              
+
               <!-- 故事标识 -->
               <div class="absolute top-4 left-4">
-                <div class="flex items-center space-x-2 px-3 py-1 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs">
+                <div
+                  class="flex items-center space-x-2 px-3 py-1 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs"
+                >
                   <Icon name="heroicons:photo" class="w-3 h-3" />
                   <span>{{ story.photos.length }} 张照片</span>
                 </div>
               </div>
-              
+
               <!-- 播放按钮 -->
-              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-350">
-                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
+              <div
+                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-350"
+              >
+                <div
+                  class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30"
+                >
                   <Icon name="heroicons:play" class="w-6 h-6 text-white ml-1" />
                 </div>
               </div>
             </div>
-            
+
             <!-- 故事信息 -->
             <div class="p-6">
-              <h3 class="text-white font-bold text-lg mb-2 line-clamp-1">{{ story.title }}</h3>
-              <p class="text-white/70 text-sm line-clamp-2 mb-4">{{ story.description }}</p>
-              
+              <h3
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+                class="font-bold text-lg mb-2 line-clamp-1"
+              >
+                {{ story.title }}
+              </h3>
+              <p
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/70'
+                    : 'text-gray-600'
+                "
+                class="text-sm line-clamp-2 mb-4"
+              >
+                {{ story.description }}
+              </p>
+
               <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2 text-white/60 text-xs">
+                <div
+                  :class="
+                    $colorMode.value === 'dark'
+                      ? 'text-white/60'
+                      : 'text-gray-500'
+                  "
+                  class="flex items-center space-x-2 text-xs"
+                >
                   <Icon name="heroicons:calendar-days" class="w-3 h-3" />
                   <span>{{ formatDate(story.createdAt) }}</span>
                 </div>
-                
-                <div v-if="story.route" class="flex items-center space-x-2 text-white/60 text-xs">
+
+                <div
+                  v-if="story.route"
+                  :class="
+                    $colorMode.value === 'dark'
+                      ? 'text-white/60'
+                      : 'text-gray-500'
+                  "
+                  class="flex items-center space-x-2 text-xs"
+                >
                   <Icon name="heroicons:map-pin" class="w-3 h-3" />
                   <span>{{ story.route.distance }}km</span>
                 </div>
@@ -119,7 +161,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- 滚动指示器 -->
         <div class="flex justify-center mt-4 space-x-2">
           <div
@@ -135,31 +177,49 @@
     <!-- 视图模式切换 -->
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-4">
-        <h2 class="text-display-sm text-white font-bold">照片集合</h2>
-        <span class="text-white/60 text-sm">{{ photos.length }} 张照片</span>
+        <h2
+          :class="$colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'"
+          class="text-display-sm font-bold"
+        >
+          照片集合
+        </h2>
+        <span
+          :class="
+            $colorMode.value === 'dark' ? 'text-white/60' : 'text-gray-500'
+          "
+          class="text-sm"
+        >
+          {{ photos.length }} 张照片
+        </span>
       </div>
-      
-      <div class="flex items-center bg-glass-bg backdrop-blur-md rounded-xl p-1 border border-glass-border">
+
+      <div
+        class="flex items-center bg-glass-bg backdrop-blur-md rounded-xl p-1 border border-glass-border"
+      >
         <button
           @click="$emit('viewModeChange', 'mosaic')"
           class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200"
           :class="[
             viewMode === 'mosaic'
               ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg'
-              : 'text-white/70 hover:text-white hover:bg-white/10'
+              : $colorMode.value === 'dark'
+              ? 'text-white/70 hover:text-white hover:bg-white/10'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
           ]"
         >
           <Icon name="heroicons:squares-plus" class="w-4 h-4" />
           <span class="text-sm font-medium">拼贴</span>
         </button>
-        
+
         <button
           @click="$emit('viewModeChange', 'grid')"
           class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200"
           :class="[
             viewMode === 'grid'
               ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg'
-              : 'text-white/70 hover:text-white hover:bg-white/10'
+              : $colorMode.value === 'dark'
+              ? 'text-white/70 hover:text-white hover:bg-white/10'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
           ]"
         >
           <Icon name="heroicons:squares-2x2" class="w-4 h-4" />
@@ -189,31 +249,62 @@
             class="w-full h-full object-cover transition-all duration-350 group-hover:animate-gallery-mosaic-hover"
           />
         </picture>
-        
+
         <!-- 悬浮信息 -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-350"
+        >
           <div class="absolute bottom-0 left-0 right-0 p-4">
-            <h3 class="text-white font-medium text-sm mb-1 line-clamp-1">{{ photo.title }}</h3>
+            <h3
+              :class="
+                $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+              "
+              class="font-medium text-sm mb-1 line-clamp-1"
+            >
+              {{ photo.title }}
+            </h3>
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2 text-white/80 text-xs">
+              <div
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/80'
+                    : 'text-gray-600'
+                "
+                class="flex items-center space-x-2 text-xs"
+              >
                 <Icon name="heroicons:camera" class="w-3 h-3" />
                 <span v-if="photo.camera">{{ photo.camera.make }}</span>
               </div>
-              <div v-if="photo.location" class="flex items-center space-x-1 text-white/80 text-xs">
+              <div
+                v-if="photo.location"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/80'
+                    : 'text-gray-600'
+                "
+                class="flex items-center space-x-1 text-xs"
+              >
                 <Icon name="heroicons:map-pin" class="w-3 h-3" />
                 <span>{{ photo.location.name }}</span>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- 标签 -->
-        <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+        <div
+          class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-350"
+        >
           <div class="flex flex-wrap gap-1">
             <span
               v-for="tag in photo.tags.slice(0, 2)"
               :key="tag"
-              class="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-xs rounded-full"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-black/60 text-white'
+                  : 'bg-white/90 text-gray-700'
+              "
+              class="px-2 py-1 backdrop-blur-sm text-xs rounded-full"
             >
               {{ tag }}
             </span>
@@ -223,7 +314,10 @@
     </div>
 
     <!-- 网格布局 -->
-    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div
+      v-else
+      class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+    >
       <div
         v-for="(photo, index) in photos"
         :key="photo.id"
@@ -242,9 +336,11 @@
             class="w-full h-full object-cover transition-all duration-350 group-hover:animate-gallery-mosaic-hover"
           />
         </picture>
-        
+
         <!-- 悬浮信息 -->
-        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-350 flex items-center justify-center">
+        <div
+          class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-350 flex items-center justify-center"
+        >
           <div class="text-center text-white">
             <h3 class="font-medium text-sm mb-1">{{ photo.title }}</h3>
             <p class="text-xs text-white/80">{{ formatDate(photo.takenAt) }}</p>
@@ -255,7 +351,9 @@
 
     <!-- 加载状态 -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+      <div
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"
+      ></div>
     </div>
   </div>
 </template>
@@ -311,7 +409,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   viewMode: 'mosaic',
-  loading: false
+  loading: false,
 })
 
 const emit = defineEmits<Emits>()
@@ -327,14 +425,14 @@ const getMosaicItemClass = (index: number, aspectRatio: number) => {
     'col-span-1 row-span-1', // 小图
     'col-span-1 row-span-1', // 小图
   ]
-  
+
   // 根据宽高比调整
   if (aspectRatio > 1.5) {
     return 'col-span-2 row-span-1' // 横图
   } else if (aspectRatio < 0.7) {
     return 'col-span-1 row-span-2' // 竖图
   }
-  
+
   return patterns[index % patterns.length]
 }
 
@@ -344,7 +442,7 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 </script>
@@ -398,11 +496,11 @@ const formatDate = (dateString: string) => {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 150px;
   }
-  
+
   .mosaic-item.col-span-2 {
     grid-column: span 2;
   }
-  
+
   .mosaic-item.row-span-2 {
     grid-row: span 2;
   }

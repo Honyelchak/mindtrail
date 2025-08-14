@@ -17,30 +17,19 @@
   <article class="article-content relative">
     <div class="container mx-auto px-4 py-16">
       <!-- 主要内容区域 -->
-      <div 
-        class="max-w-4xl mx-auto"
-        :class="{ 'max-w-5xl': focusMode }"
-      >
+      <div class="max-w-4xl mx-auto" :class="{ 'max-w-5xl': focusMode }">
         <!-- 文章正文 -->
-        <div 
-          class="prose prose-lg prose-invert max-w-none"
+        <div
+          class="max-w-none"
           :class="{
-            'prose-xl': focusMode,
-            'prose-2xl': focusMode
+            'text-xl': focusMode,
+            'text-2xl': focusMode,
           }"
         >
-          <!-- 首段特殊处理 -->
-          <div class="first-paragraph mb-8">
-            <p 
-              class="text-body-lg md:text-body-xl leading-relaxed text-white/90 first-letter:float-left first-letter:text-7xl first-letter:font-bold first-letter:mr-3 first-letter:mt-1 first-letter:text-primary-400 first-letter:animate-article-drop-cap"
-              v-html="getFirstParagraph()"
-            />
-          </div>
-
-          <!-- 其余内容 -->
-          <div 
-            class="article-body space-y-6"
-            v-html="getRestContent()"
+          <!-- Markdown内容渲染 -->
+          <MarkdownRenderer
+            :content="markdownContent"
+            :source="contentSource"
             @mouseover="handleMouseOver"
             @mouseout="handleMouseOut"
           />
@@ -64,7 +53,9 @@
           </div>
 
           <!-- 作者信息卡片 -->
-          <div class="bg-glass-bg backdrop-blur-md border border-glass-border rounded-2xl p-6">
+          <div
+            class="bg-glass-bg backdrop-blur-md border border-glass-border rounded-2xl p-6"
+          >
             <div class="flex items-start space-x-4">
               <img
                 :src="article.author.avatar"
@@ -73,12 +64,27 @@
                 loading="lazy"
               />
               <div class="flex-1">
-                <h4 class="text-white font-bold text-lg mb-1">{{ article.author.name }}</h4>
-                <p v-if="article.author.title" class="text-primary-300 text-sm mb-3">{{ article.author.title }}</p>
-                <p v-if="article.author.bio" class="text-white/70 text-sm leading-relaxed">{{ article.author.bio }}</p>
-                
+                <h4 class="text-white font-bold text-lg mb-1">
+                  {{ article.author.name }}
+                </h4>
+                <p
+                  v-if="article.author.title"
+                  class="text-primary-300 text-sm mb-3"
+                >
+                  {{ article.author.title }}
+                </p>
+                <p
+                  v-if="article.author.bio"
+                  class="text-white/70 text-sm leading-relaxed"
+                >
+                  {{ article.author.bio }}
+                </p>
+
                 <!-- 社交链接 -->
-                <div v-if="article.author.social" class="flex items-center space-x-3 mt-4">
+                <div
+                  v-if="article.author.social"
+                  class="flex items-center space-x-3 mt-4"
+                >
                   <a
                     v-for="(link, platform) in article.author.social"
                     :key="platform"
@@ -156,7 +162,7 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  focusMode: false
+  focusMode: false,
 })
 
 const emit = defineEmits<Emits>()
@@ -171,30 +177,32 @@ const socialButtons = [
   { name: 'twitter', label: 'Twitter', icon: 'simple-icons:twitter' },
   { name: 'facebook', label: 'Facebook', icon: 'simple-icons:facebook' },
   { name: 'linkedin', label: 'LinkedIn', icon: 'simple-icons:linkedin' },
-  { name: 'wechat', label: '微信', icon: 'simple-icons:wechat' }
+  { name: 'wechat', label: '微信', icon: 'simple-icons:wechat' },
 ]
 
-// 获取首段内容
-const getFirstParagraph = () => {
-  const content = props.article.content
-  const firstParagraphMatch = content.match(/<p[^>]*>(.*?)<\/p>/)
-  return firstParagraphMatch ? firstParagraphMatch[1] : ''
-}
-
-// 获取其余内容
-const getRestContent = () => {
-  const content = props.article.content
-  const firstParagraphMatch = content.match(/<p[^>]*>.*?<\/p>/)
-  if (firstParagraphMatch) {
-    return content.replace(firstParagraphMatch[0], '')
+// Markdown内容和来源
+const markdownContent = computed(() => {
+  // 如果内容是Markdown文件路径，返回路径
+  if (props.article.content.endsWith('.md')) {
+    return props.article.content
   }
-  return content
-}
+  // 否则返回内容本身
+  return props.article.content
+})
+
+const contentSource = computed(() => {
+  // 如果内容是Markdown文件路径，设置为URL模式
+  if (props.article.content.endsWith('.md')) {
+    return 'url'
+  }
+  // 否则是字符串模式
+  return 'string'
+})
 
 // 处理鼠标悬浮事件
 const handleMouseOver = (event: MouseEvent) => {
   const target = event.target as HTMLElement
-  
+
   // 检查是否是注释元素
   if (target.classList.contains('annotation')) {
     const annotationId = target.dataset.annotationId
@@ -207,7 +215,7 @@ const handleMouseOver = (event: MouseEvent) => {
 // 处理鼠标离开事件
 const handleMouseOut = (event: MouseEvent) => {
   const target = event.target as HTMLElement
-  
+
   if (target.classList.contains('annotation')) {
     hideAnnotationCard()
   }
@@ -219,16 +227,16 @@ const showAnnotationCard = (element: HTMLElement, annotationId: string) => {
   const annotation = {
     id: annotationId,
     content: element.dataset.annotationContent || '这是一个注释说明。',
-    position: { x: 0, y: 0 }
+    position: { x: 0, y: 0 },
   }
-  
+
   const rect = element.getBoundingClientRect()
   annotationStyle.value = {
     left: `${rect.left + rect.width / 2}px`,
     top: `${rect.top - 10}px`,
-    transform: 'translateX(-50%) translateY(-100%)'
+    transform: 'translateX(-50%) translateY(-100%)',
   }
-  
+
   currentAnnotation.value = annotation
   showAnnotation.value = true
 }

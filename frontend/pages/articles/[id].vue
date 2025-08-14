@@ -1,5 +1,7 @@
 <template>
-  <div class="article-detail-page min-h-screen bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary">
+  <div
+    class="article-detail-page min-h-screen bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary"
+  >
     <!-- 文章 Hero -->
     <ArticleHero
       v-if="article"
@@ -45,9 +47,14 @@
       />
 
       <!-- 相关文章推荐 -->
-      <section v-if="relatedArticles.length > 0" class="related-articles py-16 bg-glass-bg/30">
+      <section
+        v-if="relatedArticles.length > 0"
+        class="related-articles py-16 bg-glass-bg/30"
+      >
         <div class="container mx-auto px-4">
-          <h2 class="text-display-sm text-white font-bold text-center mb-12">相关文章</h2>
+          <h2 class="text-display-sm text-white font-bold text-center mb-12">
+            相关文章
+          </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <article
               v-for="relatedArticle in relatedArticles"
@@ -69,22 +76,26 @@
                   />
                 </picture>
               </div>
-              
+
               <div class="p-6">
                 <div class="mb-2">
-                  <span class="text-xs font-medium text-primary-400 uppercase tracking-wider">
+                  <span
+                    class="text-xs font-medium text-primary-400 uppercase tracking-wider"
+                  >
                     {{ relatedArticle.category }}
                   </span>
                 </div>
-                
-                <h3 class="text-white font-bold text-lg mb-3 line-clamp-2 group-hover:text-primary-300 transition-colors duration-200">
+
+                <h3
+                  class="text-white font-bold text-lg mb-3 line-clamp-2 group-hover:text-primary-300 transition-colors duration-200"
+                >
                   {{ relatedArticle.title }}
                 </h3>
-                
+
                 <p class="text-white/70 text-sm line-clamp-2 mb-4">
                   {{ relatedArticle.excerpt }}
                 </p>
-                
+
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-2">
                     <img
@@ -93,7 +104,9 @@
                       class="w-6 h-6 rounded-full"
                       loading="lazy"
                     />
-                    <span class="text-white/70 text-xs">{{ relatedArticle.author.name }}</span>
+                    <span class="text-white/70 text-xs">{{
+                      relatedArticle.author.name
+                    }}</span>
                   </div>
                   <span class="text-white/50 text-xs">
                     {{ formatDate(relatedArticle.publishedAt) }}
@@ -130,14 +143,14 @@ const relatedArticles = ref([
     excerpt: '前端开发生态系统日新月异，新的框架、工具和最佳实践层出不穷。',
     coverImage: {
       url: 'https://picsum.photos/600/400?random=2',
-      alt: '前端开发'
+      alt: '前端开发',
     },
     author: {
       name: '李四',
-      avatar: 'https://picsum.photos/100/100?random=2'
+      avatar: 'https://picsum.photos/100/100?random=2',
     },
     publishedAt: '2024-01-10T14:30:00Z',
-    category: '技术'
+    category: '技术',
   },
   {
     id: '3',
@@ -145,14 +158,14 @@ const relatedArticles = ref([
     excerpt: '一个好的设计系统不仅能提高设计效率，还能确保产品的一致性。',
     coverImage: {
       url: 'https://picsum.photos/600/400?random=3',
-      alt: '设计系统'
+      alt: '设计系统',
     },
     author: {
       name: '王五',
-      avatar: 'https://picsum.photos/100/100?random=3'
+      avatar: 'https://picsum.photos/100/100?random=3',
     },
     publishedAt: '2024-01-05T09:15:00Z',
-    category: '设计'
+    category: '设计',
   },
   {
     id: '4',
@@ -160,15 +173,15 @@ const relatedArticles = ref([
     excerpt: '从单体应用到微服务架构，这是一个充满挑战和机遇的转变过程。',
     coverImage: {
       url: 'https://picsum.photos/600/400?random=4',
-      alt: '微服务架构'
+      alt: '微服务架构',
     },
     author: {
       name: '赵六',
-      avatar: 'https://picsum.photos/100/100?random=4'
+      avatar: 'https://picsum.photos/100/100?random=4',
     },
     publishedAt: '2024-01-01T16:45:00Z',
-    category: '技术'
-  }
+    category: '技术',
+  },
 ])
 
 // 模拟文章数据
@@ -176,37 +189,13 @@ const mockArticle = {
   id: articleId,
   title: '深度学习在自然语言处理中的应用与挑战',
   excerpt: '随着深度学习技术的快速发展，自然语言处理领域迎来了前所未有的突破。',
-  content: `
-    <h2 id="introduction">引言</h2>
-    <p>深度学习技术的兴起为自然语言处理带来了革命性的变化。从最初的词袋模型到现在的大型语言模型，我们见证了这个领域的快速发展。</p>
-    
-    <h2 id="current-models">当前主流模型</h2>
-    <p>目前在NLP领域中，Transformer架构占据了主导地位。BERT、GPT系列、T5等模型都基于这一架构。</p>
-    
-    <h3 id="bert">BERT模型</h3>
-    <p>BERT（Bidirectional Encoder Representations from Transformers）通过双向编码器实现了对上下文的深度理解。</p>
-    
-    <h3 id="gpt">GPT系列</h3>
-    <p>GPT系列模型展示了生成式预训练的强大能力，特别是在文本生成任务上表现出色。</p>
-    
-    <h2 id="challenges">面临的挑战</h2>
-    <p>尽管深度学习在NLP中取得了巨大成功，但仍面临诸多挑战：</p>
-    <ul>
-      <li>计算资源需求巨大</li>
-      <li>数据偏见问题</li>
-      <li>可解释性不足</li>
-      <li>多语言支持有限</li>
-    </ul>
-    
-    <h2 id="future">未来展望</h2>
-    <p>未来的NLP发展将更加注重效率、公平性和可解释性。我们期待看到更多创新的架构和方法。</p>
-  `,
+  content: '/articles/sample-article.md', // 指向Markdown文件
   quote: '技术的进步不仅仅是算法的优化，更是对人类智能本质的深度思考。',
   coverImage: {
     url: 'https://picsum.photos/1920/1080?random=1',
     alt: '深度学习概念图',
     width: 1920,
-    height: 1080
+    height: 1080,
   },
   author: {
     name: '张三',
@@ -215,14 +204,14 @@ const mockArticle = {
     bio: '专注于机器学习和自然语言处理研究，发表过多篇顶级会议论文。',
     social: {
       twitter: 'https://twitter.com/zhangsan',
-      github: 'https://github.com/zhangsan'
-    }
+      github: 'https://github.com/zhangsan',
+    },
   },
   publishedAt: '2024-01-15T10:00:00Z',
   readingTime: 12,
   tags: ['深度学习', 'NLP', '人工智能', '机器学习'],
   category: '技术',
-  views: 1250
+  views: 1250,
 }
 
 // 页面元数据
@@ -231,31 +220,31 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: mockArticle.excerpt
+      content: mockArticle.excerpt,
     },
     {
       property: 'og:title',
-      content: mockArticle.title
+      content: mockArticle.title,
     },
     {
       property: 'og:description',
-      content: mockArticle.excerpt
+      content: mockArticle.excerpt,
     },
     {
       property: 'og:image',
-      content: mockArticle.coverImage.url
-    }
-  ]
+      content: mockArticle.coverImage.url,
+    },
+  ],
 })
 
 // 生命周期
 onMounted(() => {
   // 设置文章数据
   article.value = mockArticle
-  
+
   // 提取标题
   extractHeadings()
-  
+
   // 设置滚动监听
   setupScrollListeners()
 })
@@ -266,15 +255,15 @@ const extractHeadings = () => {
   const headingRegex = /<h([1-6])[^>]*id="([^"]*)"[^>]*>(.*?)<\/h[1-6]>/g
   const extractedHeadings = []
   let match
-  
+
   while ((match = headingRegex.exec(content)) !== null) {
     extractedHeadings.push({
       id: match[2],
       text: match[3].replace(/<[^>]*>/g, ''), // 移除HTML标签
-      level: parseInt(match[1])
+      level: parseInt(match[1]),
     })
   }
-  
+
   headings.value = extractedHeadings
 }
 
@@ -283,17 +272,17 @@ const setupScrollListeners = () => {
   const handleScroll = () => {
     const scrollTop = window.pageYOffset
     const docHeight = document.documentElement.scrollHeight - window.innerHeight
-    
+
     // 计算滚动进度
     scrollProgress.value = Math.min(scrollTop / window.innerHeight, 1)
     readingProgress.value = Math.min(scrollTop / docHeight, 1)
-    
+
     // 更新活跃标题
     updateActiveHeading()
   }
-  
+
   window.addEventListener('scroll', handleScroll)
-  
+
   onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
   })
@@ -301,9 +290,11 @@ const setupScrollListeners = () => {
 
 // 更新活跃标题
 const updateActiveHeading = () => {
-  const headingElements = headings.value.map(h => document.getElementById(h.id)).filter(Boolean)
+  const headingElements = headings.value
+    .map((h) => document.getElementById(h.id))
+    .filter(Boolean)
   const scrollTop = window.pageYOffset + 100
-  
+
   for (let i = headingElements.length - 1; i >= 0; i--) {
     const element = headingElements[i]
     if (element && element.offsetTop <= scrollTop) {
@@ -349,7 +340,10 @@ const scrollToTop = () => {
 }
 
 const scrollToBottom = () => {
-  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })
+  window.scrollTo({
+    top: document.documentElement.scrollHeight,
+    behavior: 'smooth',
+  })
 }
 
 const handleTagClick = (tag: string) => {
@@ -370,7 +364,7 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 </script>

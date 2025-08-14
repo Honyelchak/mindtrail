@@ -4,47 +4,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   // 模块配置
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@nuxtjs/color-mode',
-    '@nuxt/content',
-    '@vueuse/nuxt',
-  ],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode', '@vueuse/nuxt'],
 
-  // 颜色模式配置
+  // 颜色模式配置 - 默认深色主题，但保留切换功能
   colorMode: {
-    preference: 'system', // 默认跟随系统
-    fallback: 'light', // 回退到浅色模式
+    preference: 'dark', // 默认深色主题
+    fallback: 'dark', // 回退到深色模式
     hid: 'nuxt-color-mode-script',
     globalName: '__NUXT_COLOR_MODE__',
     componentName: 'ColorScheme',
     classPrefix: '',
     classSuffix: '',
     storageKey: 'nuxt-color-mode',
-  },
-
-  // 内容模块配置
-  content: {
-    database: {
-      default: {
-        connector: 'sqlite',
-        options: {
-          name: ':memory:',
-        },
-      },
-    },
-    markdown: {
-      toc: {
-        depth: 3,
-        searchDepth: 3,
-      },
-    },
-    highlight: {
-      theme: {
-        default: 'github-light',
-        dark: 'github-dark',
-      },
-    },
   },
 
   // 运行时配置
@@ -73,7 +44,7 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
       script: [
         {
-          src: 'https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar',
+          src: 'https://webapi.amap.com/maps?v=2.0&key=c2ffbca173cb1ab3a741b568d014e956&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar',
           defer: true,
         },
       ],

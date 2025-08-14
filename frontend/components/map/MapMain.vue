@@ -65,15 +65,21 @@
             >
               <stop
                 offset="0%"
-                :style="`stop-color:${path.color || '#3b82f6'};stop-opacity:0.8`"
+                :style="`stop-color:${
+                  path.color || '#3b82f6'
+                };stop-opacity:0.8`"
               />
               <stop
                 offset="50%"
-                :style="`stop-color:${path.color || '#8b5cf6'};stop-opacity:0.9`"
+                :style="`stop-color:${
+                  path.color || '#8b5cf6'
+                };stop-opacity:0.9`"
               />
               <stop
                 offset="100%"
-                :style="`stop-color:${path.color || '#ec4899'};stop-opacity:0.8`"
+                :style="`stop-color:${
+                  path.color || '#ec4899'
+                };stop-opacity:0.8`"
               />
             </linearGradient>
           </defs>
@@ -171,15 +177,30 @@
 
           <!-- 增强的标记标签 -->
           <div
-            class="marker-label absolute top-10 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-black/90 backdrop-blur-md text-white text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 border border-white/20 shadow-xl"
+            :class="
+              $colorMode.value === 'dark'
+                ? 'bg-black/90 text-white border-white/20'
+                : 'bg-white/95 text-gray-900 border-gray-200'
+            "
+            class="marker-label absolute top-10 left-1/2 transform -translate-x-1/2 px-3 py-2 backdrop-blur-md text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 shadow-xl"
           >
             <div class="font-medium">{{ marker.title }}</div>
-            <div class="text-xs text-white/70 mt-1">
+            <div
+              :class="
+                $colorMode.value === 'dark' ? 'text-white/70' : 'text-gray-500'
+              "
+              class="text-xs mt-1"
+            >
               {{ getMarkerTypeLabel(marker.type) }}
             </div>
             <!-- 标签箭头 -->
             <div
-              class="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/90 border-l border-t border-white/20 rotate-45"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-black/90 border-white/20'
+                  : 'bg-white/95 border-gray-200'
+              "
+              class="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 border-l border-t rotate-45"
             />
           </div>
         </div>
@@ -214,7 +235,12 @@
       >
         <button
           @click="zoomIn"
-          class="group w-12 h-12 flex items-center justify-center text-white/70 hover:text-white hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-secondary-500/20 transition-all duration-300 border-b border-glass-border hover:scale-105"
+          :class="
+            $colorMode.value === 'dark'
+              ? 'text-white/70 hover:text-white'
+              : 'text-gray-600 hover:text-gray-900'
+          "
+          class="group w-12 h-12 flex items-center justify-center hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-secondary-500/20 transition-all duration-300 border-b border-glass-border hover:scale-105"
           title="放大"
         >
           <Icon
@@ -225,7 +251,12 @@
 
         <button
           @click="zoomOut"
-          class="group w-12 h-12 flex items-center justify-center text-white/70 hover:text-white hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-secondary-500/20 transition-all duration-300 hover:scale-105"
+          :class="
+            $colorMode.value === 'dark'
+              ? 'text-white/70 hover:text-white'
+              : 'text-gray-600 hover:text-gray-900'
+          "
+          class="group w-12 h-12 flex items-center justify-center hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-secondary-500/20 transition-all duration-300 hover:scale-105"
           title="缩小"
         >
           <Icon
@@ -673,8 +704,10 @@ const getMarkerTypeColor = (type: string) => {
 
 /* 网格背景 */
 .map-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px
+    ),
     linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
 }

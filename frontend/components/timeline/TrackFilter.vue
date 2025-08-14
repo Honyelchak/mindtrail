@@ -51,7 +51,7 @@
         :class="[
           isTrackActive(track.type)
             ? 'bg-white/10 border border-white/20'
-            : 'border border-transparent hover:border-white/10'
+            : 'border border-transparent hover:border-white/10',
         ]"
         :title="`${track.label} (${track.count} 个事件)`"
       >
@@ -59,9 +59,13 @@
         <div class="relative">
           <div
             class="w-4 h-4 rounded-full border-2 border-white/30 transition-all duration-200"
-            :style="{ backgroundColor: isTrackActive(track.type) ? track.color : 'transparent' }"
+            :style="{
+              backgroundColor: isTrackActive(track.type)
+                ? track.color
+                : 'transparent',
+            }"
           />
-          
+
           <!-- 激活状态指示 -->
           <div
             v-if="isTrackActive(track.type)"
@@ -69,18 +73,20 @@
             :style="{ borderColor: track.color }"
           />
         </div>
-        
+
         <!-- 轨道图标 -->
         <div
           class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded transition-all duration-200"
           :style="{
-            backgroundColor: isTrackActive(track.type) ? `${track.color}20` : 'transparent',
-            color: isTrackActive(track.type) ? track.color : '#9ca3af'
+            backgroundColor: isTrackActive(track.type)
+              ? `${track.color}20`
+              : 'transparent',
+            color: isTrackActive(track.type) ? track.color : '#9ca3af',
           }"
         >
           <Icon :name="track.icon" class="w-4 h-4" />
         </div>
-        
+
         <!-- 轨道标签和统计 -->
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between">
@@ -88,52 +94,68 @@
               class="text-sm font-medium transition-colors duration-200"
               :class="[
                 isTrackActive(track.type)
-                  ? 'text-white'
-                  : 'text-white/60 group-hover:text-white/80'
+                  ? $colorMode.value === 'dark'
+                    ? 'text-white'
+                    : 'text-gray-900'
+                  : $colorMode.value === 'dark'
+                  ? 'text-white/60 group-hover:text-white/80'
+                  : 'text-gray-500 group-hover:text-gray-700',
               ]"
             >
               {{ track.label }}
             </span>
-            
+
             <!-- 事件计数 -->
             <span
               class="text-xs px-2 py-0.5 rounded-full transition-all duration-200"
               :class="[
                 isTrackActive(track.type)
-                  ? 'bg-white/20 text-white/90'
-                  : 'bg-white/10 text-white/50 group-hover:bg-white/15 group-hover:text-white/70'
+                  ? $colorMode.value === 'dark'
+                    ? 'bg-white/20 text-white/90'
+                    : 'bg-gray-200 text-gray-800'
+                  : $colorMode.value === 'dark'
+                  ? 'bg-white/10 text-white/50 group-hover:bg-white/15 group-hover:text-white/70'
+                  : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-hover:text-gray-700',
               ]"
             >
               {{ track.count }}
             </span>
           </div>
-          
+
           <!-- 轨道描述 (可选) -->
           <div
             v-if="track.description && showDescriptions"
-            class="text-xs text-white/50 mt-1 line-clamp-1"
+            :class="
+              $colorMode.value === 'dark' ? 'text-white/50' : 'text-gray-400'
+            "
+            class="text-xs mt-1 line-clamp-1"
           >
             {{ track.description }}
           </div>
         </div>
-        
+
         <!-- 悬浮效果 -->
         <div
           class="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
           :style="{
-            background: `linear-gradient(90deg, transparent, ${track.color}10, transparent)`
+            background: `linear-gradient(90deg, transparent, ${track.color}10, transparent)`,
           }"
         />
       </button>
     </div>
 
     <!-- 统计信息 -->
-    <div v-if="showStatistics" class="track-statistics mt-4 pt-3 border-t border-white/10">
+    <div
+      v-if="showStatistics"
+      class="track-statistics mt-4 pt-3 border-t border-white/10"
+    >
       <div class="flex items-center justify-between text-xs text-white/60">
-        <span>已选择 {{ activeTracks.length }} / {{ tracks.length }} 个轨道</span>
+        <span
+          >已选择 {{ activeTracks.length }} / {{ tracks.length }} 个轨道</span
+        >
         <span>共 {{ totalEvents }} 个事件</span>
       </div>
-      
+
       <!-- 活跃度指示器 -->
       <div class="mt-2">
         <div class="flex items-center space-x-1">
@@ -145,7 +167,7 @@
               class="h-full float-left transition-all duration-300"
               :style="{
                 width: `${getTrackPercentage(track)}%`,
-                backgroundColor: getTrackColor(track)
+                backgroundColor: getTrackColor(track),
               }"
             />
           </div>
@@ -154,7 +176,10 @@
     </div>
 
     <!-- 快速过滤预设 -->
-    <div v-if="showPresets" class="filter-presets mt-4 pt-3 border-t border-white/10">
+    <div
+      v-if="showPresets"
+      class="filter-presets mt-4 pt-3 border-t border-white/10"
+    >
       <div class="text-xs text-white/60 mb-2">快速过滤:</div>
       <div class="flex flex-wrap gap-2">
         <button
@@ -205,7 +230,7 @@ const props = withDefaults(defineProps<Props>(), {
   showBatchActions: true,
   showDescriptions: false,
   showStatistics: true,
-  showPresets: true
+  showPresets: true,
 })
 
 const emit = defineEmits<Emits>()
@@ -213,12 +238,12 @@ const emit = defineEmits<Emits>()
 // 计算属性
 const layoutClass = computed(() => ({
   'track-filter-horizontal': props.layout === 'horizontal',
-  'track-filter-vertical': props.layout === 'vertical'
+  'track-filter-vertical': props.layout === 'vertical',
 }))
 
 const togglesClass = computed(() => ({
   'flex flex-wrap gap-2': props.layout === 'horizontal',
-  'space-y-1': props.layout === 'vertical'
+  'space-y-1': props.layout === 'vertical',
 }))
 
 const totalEvents = computed(() => {
@@ -227,7 +252,7 @@ const totalEvents = computed(() => {
 
 const activeEvents = computed(() => {
   return props.tracks
-    .filter(track => props.activeTracks.includes(track.type))
+    .filter((track) => props.activeTracks.includes(track.type))
     .reduce((sum, track) => sum + track.count, 0)
 })
 
@@ -235,20 +260,20 @@ const activeEvents = computed(() => {
 const filterPresets = computed<FilterPreset[]>(() => [
   {
     name: '全部',
-    tracks: props.tracks.map(t => t.type)
+    tracks: props.tracks.map((t) => t.type),
   },
   {
     name: '内容创作',
-    tracks: ['article', 'photo']
+    tracks: ['article', 'photo'],
   },
   {
     name: '生活记录',
-    tracks: ['moment', 'milestone']
+    tracks: ['moment', 'milestone'],
   },
   {
     name: '重要事件',
-    tracks: ['milestone']
-  }
+    tracks: ['milestone'],
+  },
 ])
 
 // 方法
@@ -261,7 +286,7 @@ const toggleTrack = (trackType: string) => {
 }
 
 const selectAll = () => {
-  const allTracks = props.tracks.map(track => track.type)
+  const allTracks = props.tracks.map((track) => track.type)
   emit('tracksChange', allTracks)
 }
 
@@ -271,8 +296,8 @@ const selectNone = () => {
 
 const invertSelection = () => {
   const invertedTracks = props.tracks
-    .filter(track => !props.activeTracks.includes(track.type))
-    .map(track => track.type)
+    .filter((track) => !props.activeTracks.includes(track.type))
+    .map((track) => track.type)
   emit('tracksChange', invertedTracks)
 }
 
@@ -281,12 +306,12 @@ const applyPreset = (preset: FilterPreset) => {
 }
 
 const getTrackColor = (trackType: string) => {
-  const track = props.tracks.find(t => t.type === trackType)
+  const track = props.tracks.find((t) => t.type === trackType)
   return track?.color || '#6b7280'
 }
 
 const getTrackPercentage = (trackType: string) => {
-  const track = props.tracks.find(t => t.type === trackType)
+  const track = props.tracks.find((t) => t.type === trackType)
   if (!track || totalEvents.value === 0) return 0
   return (track.count / totalEvents.value) * 100
 }
@@ -295,25 +320,25 @@ const getTrackPercentage = (trackType: string) => {
 onMounted(() => {
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.target instanceof HTMLInputElement) return
-    
+
     // Ctrl/Cmd + A: 全选
     if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
       event.preventDefault()
       selectAll()
     }
-    
+
     // Ctrl/Cmd + D: 全不选
     if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
       event.preventDefault()
       selectNone()
     }
-    
+
     // Ctrl/Cmd + I: 反选
     if ((event.ctrlKey || event.metaKey) && event.key === 'i') {
       event.preventDefault()
       invertSelection()
     }
-    
+
     // 数字键快速切换轨道
     const num = parseInt(event.key)
     if (num >= 1 && num <= props.tracks.length) {
@@ -324,9 +349,9 @@ onMounted(() => {
       }
     }
   }
-  
+
   document.addEventListener('keydown', handleKeydown)
-  
+
   onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown)
   })
@@ -360,7 +385,12 @@ onMounted(() => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -387,12 +417,12 @@ onMounted(() => {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .batch-actions {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .batch-actions .flex {
     justify-content: center;
   }

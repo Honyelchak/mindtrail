@@ -18,7 +18,11 @@
     class="map-story-panel absolute top-0 bottom-0 w-96 bg-glass-bg/95 backdrop-blur-md border border-glass-border transition-all duration-350 z-20"
     :class="[
       position === 'left' ? 'left-0 border-r' : 'right-0 border-l',
-      collapsed ? (position === 'left' ? '-translate-x-full' : 'translate-x-full') : 'translate-x-0'
+      collapsed
+        ? position === 'left'
+          ? '-translate-x-full'
+          : 'translate-x-full'
+        : 'translate-x-0',
     ]"
   >
     <!-- 折叠/展开按钮 -->
@@ -28,7 +32,15 @@
       :class="position === 'left' ? '-right-4' : '-left-4'"
     >
       <Icon
-        :name="collapsed ? (position === 'left' ? 'heroicons:chevron-right' : 'heroicons:chevron-left') : (position === 'left' ? 'heroicons:chevron-left' : 'heroicons:chevron-right')"
+        :name="
+          collapsed
+            ? position === 'left'
+              ? 'heroicons:chevron-right'
+              : 'heroicons:chevron-left'
+            : position === 'left'
+            ? 'heroicons:chevron-left'
+            : 'heroicons:chevron-right'
+        "
         class="w-4 h-4"
       />
     </button>
@@ -50,24 +62,43 @@
               loading="lazy"
             />
           </div>
-          
+
           <!-- 故事信息 -->
           <div class="flex-1 min-w-0">
-            <h3 class="text-white font-bold text-xl mb-2 line-clamp-2">{{ story.title }}</h3>
-            <p class="text-white/70 text-sm mb-3 line-clamp-3">{{ story.description }}</p>
-            
+            <h3
+              :class="
+                $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+              "
+              class="font-bold text-xl mb-2 line-clamp-2"
+            >
+              {{ story.title }}
+            </h3>
+            <p
+              :class="
+                $colorMode.value === 'dark' ? 'text-white/70' : 'text-gray-600'
+              "
+              class="text-sm mb-3 line-clamp-3"
+            >
+              {{ story.description }}
+            </p>
+
             <!-- 故事元信息 -->
-            <div class="flex items-center space-x-4 text-white/60 text-xs">
+            <div
+              :class="
+                $colorMode.value === 'dark' ? 'text-white/60' : 'text-gray-500'
+              "
+              class="flex items-center space-x-4 text-xs"
+            >
               <div class="flex items-center space-x-1">
                 <Icon name="heroicons:calendar-days" class="w-3 h-3" />
                 <span>{{ formatDate(story.createdAt) }}</span>
               </div>
-              
+
               <div class="flex items-center space-x-1">
                 <Icon name="heroicons:map-pin" class="w-3 h-3" />
                 <span>{{ story.markers.length }} 个地点</span>
               </div>
-              
+
               <div v-if="story.distance" class="flex items-center space-x-1">
                 <Icon name="heroicons:arrow-trending-up" class="w-3 h-3" />
                 <span>{{ story.distance }}km</span>
@@ -81,9 +112,21 @@
       <div class="flex-1 overflow-y-auto">
         <!-- 故事正文 -->
         <div v-if="story.content" class="p-6 border-b border-glass-border">
-          <h4 class="text-white font-medium mb-3">故事内容</h4>
+          <h4
+            :class="
+              $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+            "
+            class="font-medium mb-3"
+          >
+            故事内容
+          </h4>
           <div
-            class="text-white/80 text-sm leading-relaxed prose prose-invert max-w-none"
+            :class="
+              $colorMode.value === 'dark'
+                ? 'text-white/80 prose-invert'
+                : 'text-gray-700'
+            "
+            class="text-sm leading-relaxed prose max-w-none"
             v-html="story.content"
           />
         </div>
@@ -91,7 +134,14 @@
         <!-- 路径信息 -->
         <div v-if="story.path" class="p-6 border-b border-glass-border">
           <div class="flex items-center justify-between mb-3">
-            <h4 class="text-white font-medium">路径信息</h4>
+            <h4
+              :class="
+                $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+              "
+              class="font-medium"
+            >
+              路径信息
+            </h4>
             <button
               @click="$emit('pathReplay', story.path)"
               class="flex items-center space-x-1 px-3 py-1 bg-primary-500/20 hover:bg-primary-500/30 text-primary-300 hover:text-primary-200 text-xs rounded-full transition-all duration-200"
@@ -100,19 +150,23 @@
               <span>回放路径</span>
             </button>
           </div>
-          
+
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div class="bg-white/5 rounded-lg p-3 text-center">
-              <div class="text-white font-medium">{{ story.path.distance }}</div>
+              <div class="text-white font-medium">
+                {{ story.path.distance }}
+              </div>
               <div class="text-white/60 text-xs">总距离 (km)</div>
             </div>
-            
+
             <div class="bg-white/5 rounded-lg p-3 text-center">
-              <div class="text-white font-medium">{{ formatDuration(story.path.duration) }}</div>
+              <div class="text-white font-medium">
+                {{ formatDuration(story.path.duration) }}
+              </div>
               <div class="text-white/60 text-xs">总用时</div>
             </div>
           </div>
-          
+
           <!-- 路径预览 -->
           <div class="relative h-24 bg-white/5 rounded-lg overflow-hidden">
             <svg
@@ -128,7 +182,7 @@
                 class="path-preview"
               />
             </svg>
-            
+
             <!-- 路径点 -->
             <div
               v-for="(point, index) in story.path.coordinates.slice(0, 5)"
@@ -142,7 +196,9 @@
         <!-- 相关标记 -->
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
-            <h4 class="text-white font-medium">相关标记 ({{ story.markers.length }})</h4>
+            <h4 class="text-white font-medium">
+              相关标记 ({{ story.markers.length }})
+            </h4>
             <div class="flex items-center space-x-2">
               <button
                 @click="showAllMarkers"
@@ -159,7 +215,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- 标记列表 -->
           <div class="space-y-3">
             <div
@@ -176,7 +232,7 @@
                 >
                   {{ index + 1 }}
                 </div>
-                
+
                 <!-- 标记缩略图 -->
                 <div
                   v-if="marker.thumbnail"
@@ -189,26 +245,39 @@
                     loading="lazy"
                   />
                 </div>
-                
+
                 <!-- 标记信息 -->
                 <div class="flex-1 min-w-0">
-                  <h5 class="text-white font-medium text-sm mb-1 line-clamp-1 group-hover:text-primary-300 transition-colors duration-200">
+                  <h5
+                    class="text-white font-medium text-sm mb-1 line-clamp-1 group-hover:text-primary-300 transition-colors duration-200"
+                  >
                     {{ marker.title }}
                   </h5>
-                  <p class="text-white/70 text-xs mb-2 line-clamp-2">{{ marker.description }}</p>
-                  
+                  <p class="text-white/70 text-xs mb-2 line-clamp-2">
+                    {{ marker.description }}
+                  </p>
+
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-2 text-white/50 text-xs">
-                      <Icon :name="getMarkerIcon(marker.type)" class="w-3 h-3" />
+                    <div
+                      class="flex items-center space-x-2 text-white/50 text-xs"
+                    >
+                      <Icon
+                        :name="getMarkerIcon(marker.type)"
+                        class="w-3 h-3"
+                      />
                       <span>{{ getMarkerTypeLabel(marker.type) }}</span>
                     </div>
-                    
-                    <span class="text-white/50 text-xs">{{ formatDate(marker.date) }}</span>
+
+                    <span class="text-white/50 text-xs">{{
+                      formatDate(marker.date)
+                    }}</span>
                   </div>
                 </div>
-                
+
                 <!-- 箭头指示 -->
-                <div class="flex-shrink-0 text-white/40 group-hover:text-white/60 transition-colors duration-200">
+                <div
+                  class="flex-shrink-0 text-white/40 group-hover:text-white/60 transition-colors duration-200"
+                >
                   <Icon name="heroicons:chevron-right" class="w-4 h-4" />
                 </div>
               </div>
@@ -217,7 +286,10 @@
         </div>
 
         <!-- 故事标签 -->
-        <div v-if="story.tags && story.tags.length > 0" class="p-6 border-t border-glass-border">
+        <div
+          v-if="story.tags && story.tags.length > 0"
+          class="p-6 border-t border-glass-border"
+        >
           <h4 class="text-white font-medium mb-3">相关标签</h4>
           <div class="flex flex-wrap gap-2">
             <span
@@ -241,7 +313,7 @@
           >
             编辑故事
           </button>
-          
+
           <button
             @click="$emit('shareStory', story)"
             class="px-4 py-2 bg-primary-500/20 hover:bg-primary-500/30 text-primary-300 hover:text-primary-200 text-sm rounded-lg transition-all duration-200"
@@ -305,7 +377,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   position: 'right',
-  collapsed: false
+  collapsed: false,
 })
 
 const emit = defineEmits<Emits>()
@@ -314,8 +386,12 @@ const emit = defineEmits<Emits>()
 const markerTypes = {
   photo: { color: '#10b981', icon: 'heroicons:photo', label: '照片' },
   article: { color: '#3b82f6', icon: 'heroicons:document-text', label: '文章' },
-  moment: { color: '#f59e0b', icon: 'heroicons:chat-bubble-left', label: '说说' },
-  milestone: { color: '#ef4444', icon: 'heroicons:flag', label: '里程碑' }
+  moment: {
+    color: '#f59e0b',
+    icon: 'heroicons:chat-bubble-left',
+    label: '说说',
+  },
+  milestone: { color: '#ef4444', icon: 'heroicons:flag', label: '里程碑' },
 }
 
 // 方法
@@ -336,7 +412,9 @@ const getMarkerColor = (type: string) => {
 }
 
 const getMarkerIcon = (type: string) => {
-  return markerTypes[type as keyof typeof markerTypes]?.icon || 'heroicons:map-pin'
+  return (
+    markerTypes[type as keyof typeof markerTypes]?.icon || 'heroicons:map-pin'
+  )
 }
 
 const getMarkerTypeLabel = (type: string) => {
@@ -345,24 +423,24 @@ const getMarkerTypeLabel = (type: string) => {
 
 const getPathPreview = (path: MapPath) => {
   if (path.coordinates.length < 2) return ''
-  
+
   const points = path.coordinates.map(([lng, lat], index) => {
     const x = (index / (path.coordinates.length - 1)) * 100
     const y = 25 + Math.sin(index * 0.5) * 10 // 简化的波形
     return `${x},${y}`
   })
-  
+
   return `M ${points.join(' L ')}`
 }
 
 const getPathPointPosition = (point: [number, number], index: number) => {
   const x = (index / 4) * 100 // 最多显示5个点
   const y = 50
-  
+
   return {
     left: `${x}%`,
     top: `${y}%`,
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
   }
 }
 
@@ -371,14 +449,14 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 const formatDuration = (minutes: number) => {
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
-  
+
   if (hours > 0) {
     return `${hours}h ${mins}m`
   }
@@ -394,8 +472,12 @@ const formatDuration = (minutes: number) => {
 }
 
 @keyframes pathPreviewFlow {
-  0% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 20; }
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 20;
+  }
 }
 
 /* 滚动条样式 */
@@ -440,7 +522,12 @@ const formatDuration = (minutes: number) => {
 }
 
 /* Prose 样式 */
-.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
   color: white;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
@@ -450,7 +537,8 @@ const formatDuration = (minutes: number) => {
   margin-bottom: 1rem;
 }
 
-.prose ul, .prose ol {
+.prose ul,
+.prose ol {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
 }

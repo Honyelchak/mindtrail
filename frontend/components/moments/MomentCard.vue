@@ -3,7 +3,7 @@
     class="group relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/20 hover:border-white/40"
     :class="[
       viewMode === 'waterfall' ? 'break-inside-avoid mb-6' : '',
-      viewMode === 'timeline' ? 'ml-8 relative' : ''
+      viewMode === 'timeline' ? 'ml-8 relative' : '',
     ]"
   >
     <!-- 时间线模式的连接线 -->
@@ -17,8 +17,10 @@
     />
 
     <!-- 卡片发光效果 -->
-    <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
-    
+    <div
+      class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"
+    />
+
     <!-- 内容区域 -->
     <div class="relative z-10">
       <!-- 头部信息 -->
@@ -31,24 +33,28 @@
           >
             {{ getMoodIcon(moment.mood) }}
           </div>
-          
+
           <!-- 时间信息 -->
           <div class="text-white/80">
             <div class="font-medium">{{ formatTime(moment.createdAt) }}</div>
             <div class="text-sm text-white/60">
-              {{ new Date(moment.createdAt).toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) }}
+              {{
+                new Date(moment.createdAt).toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              }}
             </div>
           </div>
         </div>
 
         <!-- 操作按钮 -->
-        <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div
+          class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
           <button
             @click="$emit('like', moment.id)"
             class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200"
@@ -59,13 +65,19 @@
             @click="$emit('comment', moment.id)"
             class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200"
           >
-            <Icon name="heroicons:chat-bubble-left" class="w-4 h-4 text-blue-400" />
+            <Icon
+              name="heroicons:chat-bubble-left"
+              class="w-4 h-4 text-blue-400"
+            />
           </button>
         </div>
       </div>
 
       <!-- 内容文本 -->
-      <div class="text-white/90 leading-relaxed mb-4 text-sm md:text-base">
+      <div
+        :class="$colorMode.value === 'dark' ? 'text-white/90' : 'text-gray-800'"
+        class="leading-relaxed mb-4 text-sm md:text-base"
+      >
         {{ moment.content }}
       </div>
 
@@ -82,8 +94,13 @@
             class="w-full h-48 md:h-64 object-cover transition-transform duration-300 group-hover/image:scale-105"
             loading="lazy"
           />
-          <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <Icon name="heroicons:magnifying-glass-plus" class="w-8 h-8 text-white" />
+          <div
+            class="absolute inset-0 bg-black/20 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          >
+            <Icon
+              name="heroicons:magnifying-glass-plus"
+              class="w-8 h-8 text-white"
+            />
           </div>
         </div>
 
@@ -91,8 +108,10 @@
           v-else
           class="grid gap-2"
           :class="{
-            'grid-cols-2': moment.images.length === 2 || moment.images.length === 4,
-            'grid-cols-3': moment.images.length === 3 || moment.images.length > 4
+            'grid-cols-2':
+              moment.images.length === 2 || moment.images.length === 4,
+            'grid-cols-3':
+              moment.images.length === 3 || moment.images.length > 4,
           }"
         >
           <div
@@ -107,10 +126,15 @@
               class="w-full h-full object-cover transition-transform duration-300 group-hover/image:scale-105"
               loading="lazy"
             />
-            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <Icon name="heroicons:magnifying-glass-plus" class="w-6 h-6 text-white" />
+            <div
+              class="absolute inset-0 bg-black/20 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+            >
+              <Icon
+                name="heroicons:magnifying-glass-plus"
+                class="w-6 h-6 text-white"
+              />
             </div>
-            
+
             <!-- 更多图片提示 -->
             <div
               v-if="index === 5 && moment.images.length > 6"
@@ -123,11 +147,19 @@
       </div>
 
       <!-- 标签 -->
-      <div v-if="moment.tags && moment.tags.length > 0" class="flex flex-wrap gap-2 mb-4">
+      <div
+        v-if="moment.tags && moment.tags.length > 0"
+        class="flex flex-wrap gap-2 mb-4"
+      >
         <span
           v-for="tag in moment.tags"
           :key="tag"
-          class="px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white/80 hover:bg-white/30 transition-colors duration-200 cursor-pointer"
+          :class="
+            $colorMode.value === 'dark'
+              ? 'bg-white/20 text-white/80 hover:bg-white/30'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          "
+          class="px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 cursor-pointer"
           @click="$emit('tagClick', tag)"
         >
           #{{ tag }}
@@ -135,14 +167,17 @@
       </div>
 
       <!-- 底部信息 -->
-      <div class="flex items-center justify-between text-xs text-white/60">
+      <div
+        :class="$colorMode.value === 'dark' ? 'text-white/60' : 'text-gray-500'"
+        class="flex items-center justify-between text-xs"
+      >
         <div class="flex items-center space-x-4">
           <!-- 位置信息 -->
           <div v-if="moment.location?.name" class="flex items-center space-x-1">
             <Icon name="heroicons:map-pin" class="w-3 h-3" />
             <span>{{ moment.location.name }}</span>
           </div>
-          
+
           <!-- 设备信息 -->
           <div v-if="moment.device" class="flex items-center space-x-1">
             <Icon name="heroicons:device-phone-mobile" class="w-3 h-3" />
@@ -152,12 +187,21 @@
 
         <!-- 互动数据 -->
         <div class="flex items-center space-x-4">
-          <div v-if="moment.likes && moment.likes > 0" class="flex items-center space-x-1">
+          <div
+            v-if="moment.likes && moment.likes > 0"
+            class="flex items-center space-x-1"
+          >
             <Icon name="heroicons:heart" class="w-3 h-3 text-red-400" />
             <span>{{ moment.likes }}</span>
           </div>
-          <div v-if="moment.comments && moment.comments > 0" class="flex items-center space-x-1">
-            <Icon name="heroicons:chat-bubble-left" class="w-3 h-3 text-blue-400" />
+          <div
+            v-if="moment.comments && moment.comments > 0"
+            class="flex items-center space-x-1"
+          >
+            <Icon
+              name="heroicons:chat-bubble-left"
+              class="w-3 h-3 text-blue-400"
+            />
             <span>{{ moment.comments }}</span>
           </div>
         </div>
@@ -191,7 +235,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   viewMode: 'card',
-  isLast: false
+  isLast: false,
 })
 
 const emit = defineEmits<Emits>()
@@ -212,7 +256,7 @@ const getMoodIcon = (mood?: string) => {
     thinking: '🤔',
     tired: '😴',
     surprised: '😲',
-    confused: '😕'
+    confused: '😕',
   }
   return mood ? moodIcons[mood] || '😐' : '😐'
 }
@@ -229,7 +273,7 @@ const getMoodColor = (mood?: string) => {
     thinking: 'text-purple-400',
     tired: 'text-gray-400',
     surprised: 'text-orange-400',
-    confused: 'text-indigo-400'
+    confused: 'text-indigo-400',
   }
   return mood ? moodColors[mood] || 'text-gray-400' : 'text-gray-400'
 }
@@ -239,19 +283,19 @@ const formatTime = (dateString: string) => {
   const date = new Date(dateString)
   const now = new Date()
   const diff = now.getTime() - date.getTime()
-  
+
   const minutes = Math.floor(diff / 60000)
   const hours = Math.floor(diff / 3600000)
   const days = Math.floor(diff / 86400000)
-  
+
   if (minutes < 1) return '刚刚'
   if (minutes < 60) return `${minutes}分钟前`
   if (hours < 24) return `${hours}小时前`
   if (days < 7) return `${days}天前`
-  
+
   return date.toLocaleDateString('zh-CN', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
@@ -274,19 +318,19 @@ const closeImageViewer = () => {
     column-count: 1;
     column-gap: 1.5rem;
   }
-  
+
   @media (min-width: 640px) {
     .waterfall-container {
       column-count: 2;
     }
   }
-  
+
   @media (min-width: 1024px) {
     .waterfall-container {
       column-count: 3;
     }
   }
-  
+
   @media (min-width: 1280px) {
     .waterfall-container {
       column-count: 4;

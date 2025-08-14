@@ -1,5 +1,5 @@
 <template>
-  <div class="map-page -mx-4 -my-8 -mt-20">
+  <div class="map-page -mx-4 -my-8">
     <!-- 页面内容区域 -->
     <div>
       <!-- 优化后的页面头部 -->

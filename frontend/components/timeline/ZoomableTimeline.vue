@@ -54,7 +54,9 @@
                   :class="[
                     zoomLevel === level.value
                       ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg transform scale-105'
-                      : 'text-white/70 hover:text-white hover:bg-white/10',
+                      : $colorMode.value === 'dark'
+                      ? 'text-white/70 hover:text-white hover:bg-white/10'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
                   ]"
                 >
                   {{ level.label }}
@@ -78,7 +80,9 @@
                   :class="
                     playMode
                       ? 'text-primary-300'
-                      : 'text-white/80 group-hover:text-white'
+                      : $colorMode.value === 'dark'
+                      ? 'text-white/80 group-hover:text-white'
+                      : 'text-gray-600 group-hover:text-gray-900'
                   "
                 />
                 <div
@@ -88,7 +92,12 @@
 
               <button
                 @click="resetTimeline"
-                class="group w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'bg-white/10 border-white/20 text-white/60 hover:text-white hover:bg-white/20'
+                    : 'bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-200'
+                "
+                class="group w-10 h-10 backdrop-blur-md rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-105"
                 title="重置时间轴"
               >
                 <Icon

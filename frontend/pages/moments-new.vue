@@ -1,10 +1,15 @@
 <template>
-  <div class="min-h-screen relative overflow-hidden -mx-4 -my-8 -mt-20">
+  <div class="min-h-screen relative overflow-hidden -mx-4 -my-8">
     <!-- 动态背景 -->
     <div class="fixed inset-0 z-0">
       <!-- 渐变背景 -->
       <div
-        class="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"
+        class="absolute inset-0 transition-all duration-500"
+        :class="
+          $colorMode.value === 'dark'
+            ? 'bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900'
+            : 'bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50'
+        "
       />
 
       <!-- 动态光斑 -->
@@ -47,10 +52,20 @@
         >
           <!-- 左侧标题 -->
           <div class="mb-6 lg:mb-0">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">
+            <h1
+              class="text-4xl md:text-5xl font-bold mb-2 transition-colors duration-300"
+              :class="
+                $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+              "
+            >
               生活说说
             </h1>
-            <p class="text-lg text-white/70">
+            <p
+              :class="
+                $colorMode.value === 'dark' ? 'text-white/70' : 'text-gray-600'
+              "
+              class="text-lg"
+            >
               记录生活中的点点滴滴，分享内心的感悟与思考
             </p>
           </div>
@@ -58,20 +73,64 @@
           <!-- 右侧统计信息 -->
           <div class="flex items-center space-x-6">
             <div class="text-center">
-              <div class="text-2xl font-bold text-white">
+              <div
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+                class="text-2xl font-bold"
+              >
                 {{ statistics.total }}
               </div>
-              <div class="text-sm text-white/60">总数</div>
+              <div
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-500'
+                "
+                class="text-sm"
+              >
+                总数
+              </div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-white">{{ todayCount }}</div>
-              <div class="text-sm text-white/60">今日</div>
+              <div
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+                class="text-2xl font-bold"
+              >
+                {{ todayCount }}
+              </div>
+              <div
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-500'
+                "
+                class="text-sm"
+              >
+                今日
+              </div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-white">
+              <div
+                :class="
+                  $colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
+                "
+                class="text-2xl font-bold"
+              >
                 {{ thisMonthCount }}
               </div>
-              <div class="text-sm text-white/60">本月</div>
+              <div
+                :class="
+                  $colorMode.value === 'dark'
+                    ? 'text-white/60'
+                    : 'text-gray-500'
+                "
+                class="text-sm"
+              >
+                本月
+              </div>
             </div>
           </div>
         </div>
@@ -89,7 +148,9 @@
               :class="[
                 viewMode === mode.value
                   ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                  : 'text-white/70 hover:text-white hover:bg-white/10',
+                  : $colorMode.value === 'dark'
+                  ? 'text-white/70 hover:text-white hover:bg-white/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
               ]"
             >
               <Icon :name="mode.icon" class="w-4 h-4" />
@@ -111,7 +172,12 @@
             <!-- 心情过滤 -->
             <select
               v-model="selectedMood"
-              class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 hover:bg-white/20 transition-colors duration-200"
+              :class="
+                $colorMode.value === 'dark'
+                  ? 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                  : 'bg-gray-100 border-gray-200 text-gray-900 hover:bg-gray-200'
+              "
+              class="backdrop-blur-md rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors duration-200"
             >
               <option value="">全部心情</option>
               <option value="happy">😊 开心</option>
